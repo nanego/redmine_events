@@ -1,0 +1,11 @@
+fr:
+  field_issue: Evénement
+  label_issue_plural: Evénements
+  label_issue_new: Nouvel événement
+  label_issue: Evénement
+  label_issue_view_all: Voir tous les événements
+  label_issues_by: "Evénements par %{value}"
+  label_issue_added: Evénement ajouté
+  label_issue_updated: Evénement mis à jour
+
+  label_bulletins: Bulletins de synthèse
