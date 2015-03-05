@@ -7,5 +7,6 @@ fr:
   label_issues_by: "Evénements par %{value}"
   label_issue_added: Evénement ajouté
   label_issue_updated: Evénement mis à jour
+  label_issue_tracking: Suivi des événements
 
   label_bulletins: Bulletins de synthèse
