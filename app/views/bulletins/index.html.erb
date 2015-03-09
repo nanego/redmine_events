@@ -1,0 +1,41 @@
+<div class="contextual">
+  <%= link_to(l(:label_bulletins_new),
+            new_project_bulletin_path(@project),
+            :class => 'icon icon-add',
+            :onclick => 'showAndScrollTo("add-bulletins", "bulletins_title"); return false;') if @project  %>
+</div>
+
+<div id="add-bulletins" style="display:none;margin-bottom: 20px;">
+<h2><%=l(:label_bulletins_new)%></h2>
+
+  <% puts "bulletins : " + @bulletins.inspect %>
+
+<%= labelled_form_for @bulletin, :url => project_bulletins_path(@project),
+                                           :html => { :id => 'bulletins-form', :multipart => true } do |f| %>
+<%= render :partial => 'bulletins/form', :locals => { :f => f } %>
+<%= submit_tag l(:button_create) %>
+<!-- preview_link preview_news_path(:project_id => @project), 'bulletins-form' %> | -->
+<%= link_to l(:button_cancel), "#", :onclick => '$("#add-bulletins").hide()' %>
+<% end if @project %>
+<div id="preview" class="wiki"></div>
+</div>
+
+<h2><%=l(:label_bulletins_plural)%></h2>
+
+<% if @bulletins.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <%= render :partial => 'issues/list', :locals => {:issues => @bulletins, :query => @query} %>
+  <!-- p class="pagination">< pagination_links_full @issue_pages, @issue_count ></p -->
+<% end %>
+
+<% other_formats_links do |f| %>
+  <%= f.link_to 'Atom', :url => {:project_id => @project, :key => User.current.rss_key} %>
+<% end %>
+
+<% content_for :header_tags do %>
+  <%= auto_discovery_link_tag(:atom, params.merge({:format => 'atom', :page => nil, :key => User.current.rss_key})) %>
+  <%= stylesheet_link_tag 'scm' %>
+<% end %>
+
+<% html_title(l(:label_bulletins_plural)) -%>

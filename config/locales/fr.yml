@@ -8,5 +8,10 @@ fr:
   label_issue_added: Evénement ajouté
   label_issue_updated: Evénement mis à jour
   label_issue_tracking: Suivi des événements
+  label_related_issues: Evénements liés
 
   label_bulletins: Bulletins de synthèse
+  label_bulletins_plural: Bulletins de synthèse
+  label_bulletins_new: Nouveau bulletin de synthèse
+
+  notice_bulletin_successful_create: Nouveau bulletin sauvegardé

@@ -1,3 +1,5 @@
+require 'redmine_events/hooks'
+
 Redmine::Plugin.register :redmine_events do
   name 'Redmine Events plugin'
   author 'Author name'
@@ -6,5 +8,5 @@ Redmine::Plugin.register :redmine_events do
   url 'http://example.com/path/to/plugin'
   author_url 'http://example.com/about'
   permission :bulletins, { :bulletins => [:index] }, :public => true
-  menu :project_menu, :bulletins, {controller: 'bulletins', action: 'index'}, :caption => :label_bulletins
+  menu :project_menu, :bulletins, {controller: 'bulletins', action: 'index'}, :caption => :label_bulletins, :param => :project_id
 end
