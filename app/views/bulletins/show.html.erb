@@ -142,7 +142,7 @@ end %>
 <% if @issue.editable? %>
   <div id="update" style="display:none;">
   <h3><%= l(:button_edit) %></h3>
-  <!-- render :partial => 'issues/edit' -->
+  <%= render :partial => 'bulletins/edit' %>
   </div>
 <% end %>
 
