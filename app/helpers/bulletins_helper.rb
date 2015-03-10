@@ -318,5 +318,10 @@ module BulletinsHelper
     end
   end
 
+  # Return a string used to display a custom value
+  def show_value(custom_value, html=true)
+    format_object(custom_value, html)
+  end
+
 
 end

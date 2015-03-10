@@ -53,6 +53,7 @@ class BulletinsController < ApplicationController
       end
       return
     else
+      @bulletin = @issue
       respond_to do |format|
         format.html { render :action => 'index' }
       end
