@@ -1,5 +1,6 @@
 include SortHelper
 include BulletinsHelper
+include Redmine::Export::PDF
 
 class BulletinsController < ApplicationController
 
@@ -31,7 +32,7 @@ class BulletinsController < ApplicationController
     related_evts = Issue.joins(:tracker).where("trackers.name LIKE '%Flash%'")
 
     related_evts.each do |evt|
-      @issue.description << "\n# #{evt.category}"
+      @issue.description << "\n# #{evt.custom_field_value(CustomField.find_by_name('Domaines')).first}"
       @issue.description << "\n## #{evt.subject}"
       @issue.description << "\n#{evt.description}"
     end
