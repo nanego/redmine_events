@@ -8,8 +8,6 @@
 <div id="add-bulletins" style="display:none;margin-bottom: 20px;">
 <h2><%=l(:label_bulletins_new)%></h2>
 
-  <% puts "bulletins : " + @bulletins.inspect %>
-
 <%= labelled_form_for @bulletin, :url => project_bulletins_path(@project),
                                            :html => { :id => 'bulletins-form', :multipart => true } do |f| %>
 <%= render :partial => 'bulletins/form', :locals => { :f => f } %>
