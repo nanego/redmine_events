@@ -1,4 +1,4 @@
-class BulletinsController < ApplicationController
+class PointsController < ApplicationController
 
   before_filter :find_optional_project, :only => [:index]
 
@@ -33,14 +33,14 @@ class BulletinsController < ApplicationController
     @query.sort_criteria = sort_criteria.to_a
 
     scope = @project ? @project.issues.visible : Issue.visible
-    @bulletin = Issue.new # for adding bulletins inline
-    @bulletin.subject = "Bulletin quotidien CMVOA N° "
-    @bulletin.start_date = 1.day.ago.strftime("%Y-%m-%d 08:30")
-    @bulletin.due_date = Time.now.strftime("%Y-%m-%d 08:30")
-    # @bulletin.description = "Bulletin quotidien"
-    @bulletins = scope.includes([:author, :project]).
+    @point = Issue.new # for adding points inline
+    @point.subject = "Point de situation CMVOA N° "
+    @point.start_date = 1.day.ago.strftime("%Y-%m-%d 08:30")
+    @point.due_date = Time.now.strftime("%Y-%m-%d 08:30")
+    # @point.description = "point quotidien"
+    @points = scope.includes([:author, :project]).
         joins(:tracker).
-        where("trackers.name like '%Bulletin%'").
+        where("trackers.name like '%point%'").
         order("#{Issue.table_name}.updated_on DESC").
         all
   end
@@ -67,7 +67,7 @@ class BulletinsController < ApplicationController
       communes.each do |commune, events|
         events.each do |event|
           resume = event.custom_field_value(CustomField.find_by_name('Résumé'))
-          if resume.present? && event.priority_id >= 3
+          if resume.present?
             @issue.description << "\n\n* #{event.subject} - #{resume}"
           end
         end
@@ -113,13 +113,13 @@ class BulletinsController < ApplicationController
 
       respond_to do |format|
         format.html {
-          flash[:notice] = l(:notice_bulletin_successful_create, :id => view_context.link_to("##{@issue.id}", issue_path(@issue), :title => @issue.subject))
-          redirect_to project_bulletin_path(project_id: @issue.project_id, id: @issue.id)
+          flash[:notice] = l(:notice_point_successful_create, :id => view_context.link_to("##{@issue.id}", issue_path(@issue), :title => @issue.subject))
+          redirect_to project_point_path(project_id: @issue.project_id, id: @issue.id)
         }
       end
       return
     else
-      @bulletin = @issue
+      @point = @issue
       respond_to do |format|
         format.html { render :action => 'index' }
       end
@@ -199,9 +199,9 @@ class BulletinsController < ApplicationController
       @available_watchers = (@available_watchers + @issue.project.users.sort).uniq
     end
 
-    # Force bulletins params
-    tracker_bulletin = Tracker.where("name like '%Bulletin%'").first
-    @issue.tracker = tracker_bulletin if tracker_bulletin
+    # Force points params
+    tracker_point = Tracker.where("name like '%Point%'").first
+    @issue.tracker = tracker_point if tracker_point
   end
 
 end

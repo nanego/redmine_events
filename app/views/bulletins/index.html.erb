@@ -20,7 +20,7 @@
 
 <h2><%=l(:label_bulletins_plural)%></h2>
 
-<% if @bulletins.empty? %>
+<% if @bulletins.blank? %>
   <p class="nodata"><%= l(:label_no_data) %></p>
 <% else %>
   <%= render :partial => 'issues/list', :locals => {:issues => @bulletins, :query => @query} %>

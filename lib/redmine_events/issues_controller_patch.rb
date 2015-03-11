@@ -62,7 +62,9 @@ class IssuesController
   def index
     retrieve_query
 
-    # Custom start
+
+
+        # Custom start
     @query.filters.reverse_merge! "tracker_id"=>{:operator=>"=", :values=>["#{Tracker.find_by_name("Fiche événement").id}"]}
     # Custom end
 
@@ -137,5 +139,32 @@ class IssuesController
 
   end
 
+end
 
+require_dependency 'issue_query'
+class IssueQuery < Query
+  class_attribute :context
+  def default_columns_names
+    @default_columns_names ||= begin
+      default_columns = [:id, :priority, :subject, :cf_2, :cf_1, :created_on]
+    end
+  end
+end
+
+module Redmine
+  module MenuManager
+    module MenuHelper
+      def render_single_menu_node(item, caption, url, selected)
+        if action_name == "flashs"
+          case caption
+            when "Evénements"
+              selected = false
+            when "Flashs"
+              selected = true
+          end
+        end
+        link_to(h(caption), url, item.html_options(:selected => selected))
+      end
+    end
+  end
 end

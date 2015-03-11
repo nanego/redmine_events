@@ -5,6 +5,7 @@ RedmineApp::Application.routes.draw do
   # resources :bulletins#, :only => [:index]
   resources :projects do
     resources :bulletins
+    resources :points
     get :flashs, controller: "issues", action: "flashs"
   end
   resources :issues do

@@ -1,0 +1,39 @@
+<div class="contextual">
+  <%= link_to(l(:label_points_new),
+            new_project_point_path(@project),
+            :class => 'icon icon-add',
+            :onclick => 'showAndScrollTo("add-points", "points_title"); return false;') if @project  %>
+</div>
+
+<div id="add-points" style="display:none;margin-bottom: 20px;">
+<h2><%=l(:label_points_new)%></h2>
+
+<%= labelled_form_for @point, :url => project_points_path(@project),
+                                           :html => { :id => 'params[:]oints-form', :multipart => true } do |f| %>
+<%= render :partial => 'points/form', :locals => { :f => f } %>
+<%= submit_tag l(:button_create) %>
+<!-- preview_link preview_news_path(:project_id => @project), 'points-form' %> | -->
+<%= link_to l(:button_cancel), "#", :onclick => '$("#add-points").hide()' %>
+<% end if @project %>
+<div id="preview" class="wiki"></div>
+</div>
+
+<h2><%=l(:label_points_plural)%></h2>
+
+<% if @points.blank? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <%= render :partial => 'issues/list', :locals => {:issues => @points, :query => @query} %>
+  <!-- p class="pagination">< pagination_links_full @issue_pages, @issue_count ></p -->
+<% end %>
+
+<% other_formats_links do |f| %>
+  <%= f.link_to 'Atom', :url => {:project_id => @project, :key => User.current.rss_key} %>
+<% end %>
+
+<% content_for :header_tags do %>
+  <%= auto_discovery_link_tag(:atom, params.merge({:format => 'atom', :page => nil, :key => User.current.rss_key})) %>
+  <%= stylesheet_link_tag 'scm' %>
+<% end %>
+
+<% html_title(l(:label_points_plural)) -%>

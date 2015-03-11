@@ -12,8 +12,10 @@ Redmine::Plugin.register :redmine_events do
   version '0.0.1'
   url 'http://example.com/path/to/plugin'
   author_url 'http://example.com/about'
+  permission :points, { :points => [:index] }, :public => true
   permission :bulletins, { :bulletins => [:index] }, :public => true
   permission :flashs, { :issues => [:flashs] }, :public => true
   menu :project_menu, :flashs, {controller: 'issues', action: 'flashs'}, :caption => :label_flashs, :param => :project_id
   menu :project_menu, :bulletins, {controller: 'bulletins', action: 'index'}, :caption => :label_bulletins, :param => :project_id
+  menu :project_menu, :points, {controller: 'points', action: 'index'}, :caption => :label_points, :param => :project_id
 end

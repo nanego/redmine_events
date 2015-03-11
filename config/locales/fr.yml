@@ -16,5 +16,9 @@ fr:
 
   notice_bulletin_successful_create: Nouveau bulletin sauvegardé
 
+  label_points: Points de situation
+  label_points_plural: Points de situation
+  label_points_new: Nouveau point de situation
+
   label_flashs: Flashs
   button_generate_flash: Générer un flash
