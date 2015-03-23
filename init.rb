@@ -7,17 +7,21 @@ end
 
 Redmine::Plugin.register :redmine_events do
   name 'Redmine Events plugin'
-  author 'Author name'
-  description 'This is a plugin for Redmine'
+  author 'Vincent ROBERT'
+  description 'This is a private plugin for Redmine which allow us to create and organize event notifications instead of issues'
   version '0.0.1'
   url 'http://example.com/path/to/plugin'
   author_url 'http://example.com/about'
+  requires_redmine_plugin :redmine_base_select2, :version_or_higher => '0.0.1'
   permission :points, { :points => [:index] }, :public => true
   permission :bulletins, { :bulletins => [:index] }, :public => true
   permission :flashs, { :issues => [:flashs] }, :public => true
   menu :project_menu, :flashs, {controller: 'issues', action: 'flashs'}, :caption => :label_flashs, :param => :project_id
   menu :project_menu, :bulletins, {controller: 'bulletins', action: 'index'}, :caption => :label_bulletins, :param => :project_id
   menu :project_menu, :points, {controller: 'points', action: 'index'}, :caption => :label_points, :param => :project_id
+
+  settings :default => { 'select2_fields' => [], 'autocompte_communes_field' => nil},
+           :partial => 'settings/redmine_plugin_events_settings'
 
   unless Rails.env.test?
     Redmine::MenuManager.map :top_menu do |menu|

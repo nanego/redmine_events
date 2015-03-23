@@ -2,7 +2,7 @@ Deface::Override.new :virtual_path  => "issues/new",
                      :name          => "add_javascript_to_new_issue_form",
                      :insert_after    => "div.wiki",
                      :text          => <<-EOS
-<script>
+<script type="text/javascript">
 
 $( "p:contains('Nombre de')" ).css( "display", "none" );
 
@@ -14,6 +14,23 @@ $( "#issue_custom_field_values_4" ).change(function() {
   }
 });
 
+$(function() {
+  <% Setting['plugin_redmine_events']['select2_fields'].each do |custom_field_id| %>
+    $('#issue_custom_field_values_<%= custom_field_id %>').select2({
+      containerCss: {minWidth: '95%'}
+    });
+  <% end %>
+
+  <% commune_field_id = Setting['plugin_redmine_events']['autocompte_communes_field']
+    if commune_field_id.present? %>
+      $('#issue_custom_field_values_<%= commune_field_id %>').autocomplete({
+        minLength: 2,
+        source: "/communes"
+      });
+  <% end %>
+});
+
 </script>
 
 EOS
+

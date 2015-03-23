@@ -1,0 +1,32 @@
+<%
+   all_fields = CustomField.select("id, name").where(:type => "IssueCustomField")
+   options = []
+   all_fields.each do |f|
+     options << [f.name, f.id]
+   end
+%>
+
+<table>
+  <tbody>
+  <tr>
+    <th style="text-align: right;"><%= l("select2_custom_fields") %> :</th>
+    <td>
+      <%= select_tag "settings[select2_fields]", options_for_select(options, Setting['plugin_redmine_events']['select2_fields']), :id => "settings_select2_fields", :multiple => true, :size => 10 %>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_autocompte_communes_field") %> :</th>
+    <td>
+      <%= select_tag "settings[autocompte_communes_field]", options_for_select(options, Setting['plugin_redmine_events']['autocompte_communes_field']) %>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<script type="text/javascript">
+  $(function() {
+    $('#settings_select2_fields').select2({
+      containerCss: {minWidth: '300px'}
+    });
+  });
+</script>
