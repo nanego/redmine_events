@@ -22,9 +22,10 @@ namespace :redmine do
       files = ["plugins/redmine_events/db/seed_data/RE.csv",
                "plugins/redmine_events/db/seed_data/FR.csv"]
 
+      puts "Importation en cours"
       files.each do |file|
-        CSV.foreach(file, :headers => false, :col_sep => ";").each_with_index do |row, i|
-          puts "Importation : #{i/550.to_i} %" if i % 1000 == 0
+        CSV.foreach(file, :headers => false, :col_sep => ";") do |row|
+          puts ((($.).to_i)/550.to_i).to_s+'%' if ($.).to_i % 1000 == 0
           Commune.create!(
             :country => row[0],
             :postal_code => row[1],
