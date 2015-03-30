@@ -1,4 +1,4 @@
-module RedmineComments
+module RedmineEvents
   class Hooks < Redmine::Hook::ViewListener
     #adds our css on each page
     def view_layouts_base_html_head(context)

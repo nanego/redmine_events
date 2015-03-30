@@ -1,0 +1,7 @@
+<% if @issue.description? %>
+  <div class="description">
+    <div class="wiki">
+      <%= textilizable @issue, :description, :attachments => @issue.attachments %>
+    </div>
+  </div>
+<% end %>

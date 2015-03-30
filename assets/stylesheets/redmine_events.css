@@ -1,0 +1,16 @@
+#context-menu #larger-context-menu ul {
+    width: 175px;
+}
+
+.description .wiki{
+    background-color: white;
+}
+
+div.wiki table, div.wiki td, div.wiki th {
+    border:none;
+}
+
+/* Disable subtasks */
+/* (could be hidden with permissions, but not for admins) */
+div#issue_tree, div#issue_tree + hr { display:none; }
+p#parent_issue { display:none; }

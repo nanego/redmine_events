@@ -22,3 +22,9 @@ fr:
 
   label_flashs: Flashs
   button_generate_flash: Générer un flash
+
+  button_create_point_de_situation: "Nouveau Point de Situation"
+
+  time:
+    formats:
+      complete: "%A %d %B %Y à %H:%M"

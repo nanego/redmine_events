@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="<%= current_language %>">
+<head>
+  <meta charset="utf-8" />
+  <title><%=h html_title %></title>
+  <meta name="description" content="<%= Redmine::Info.app_name %>" />
+  <meta name="keywords" content="issue,bug,tracker" />
+  <%= csrf_meta_tag %>
+  <%= favicon %>
+  <%= stylesheet_link_tag 'jquery/jquery-ui-1.11.0', 'application', :media => 'all' %>
+  <%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
+  <%= javascript_heads %>
+  <%= heads_for_theme %>
+
+  <%= yield :header_tags -%>
+</head>
+<body class="<%=h body_css_classes %>">
+<div id="wrapper">
+  <div id="wrapper2">
+    <div id="wrapper3">
+
+      <div id="main" class="nosidebar">
+
+        <div id="content">
+
+          <%= yield %>
+
+          <div style="clear:both;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="ajax-indicator" style="display:none;"><span><%= l(:label_loading) %></span></div>
+    <div id="ajax-modal" style="display:none;"></div>
+
+  </div>
+</div>
+</body>
+</html>

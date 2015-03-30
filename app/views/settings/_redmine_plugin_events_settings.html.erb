@@ -20,6 +20,18 @@
       <%= select_tag "settings[autocompte_communes_field]", options_for_select(options, Setting['plugin_redmine_events']['autocompte_communes_field']) %>
     </td>
   </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_summary_field") %> :</th>
+    <td>
+      <%= select_tag "settings[summary_field]", options_for_select(options, Setting['plugin_redmine_events']['summary_field']) %>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_domain_field") %> :</th>
+    <td>
+      <%= select_tag "settings[domain_field]", options_for_select(options, Setting['plugin_redmine_events']['domain_field']) %>
+    </td>
+  </tr>
   </tbody>
 </table>
 

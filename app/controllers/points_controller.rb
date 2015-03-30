@@ -33,14 +33,9 @@ class PointsController < ApplicationController
     @query.sort_criteria = sort_criteria.to_a
 
     scope = @project ? @project.issues.visible : Issue.visible
-    @point = Issue.new # for adding points inline
-    @point.subject = "Point de situation CMVOA N° "
-    @point.start_date = 1.day.ago.strftime("%Y-%m-%d 08:30")
-    @point.due_date = Time.now.strftime("%Y-%m-%d 08:30")
-    # @point.description = "point quotidien"
     @points = scope.includes([:author, :project]).
         joins(:tracker).
-        where("trackers.name like '%point%'").
+        where("trackers.name like 'Point%'").
         order("#{Issue.table_name}.updated_on DESC").
         all
   end
@@ -48,7 +43,8 @@ class PointsController < ApplicationController
   def create
     @project = Project.find(params[:project_id]) if params[:project_id].present?
     build_new_issue_from_params
-    related_evts = Issue.joins(:tracker).where("trackers.name LIKE '%Fiche %'")
+    related_evts = Issue.where("id IN (?)", params[:ids])
+    @issue.subject = "Point de situation du JJ/MM/YYYY à HH:MM"
     @issue.description ||= ""
 
 

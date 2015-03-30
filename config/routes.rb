@@ -10,6 +10,9 @@ RedmineApp::Application.routes.draw do
   end
   resources :issues do
     get :create_flash, controller: "issues", action: "create_flash"
+    member do
+      get :description
+    end
   end
   resources :bulletins, only: [:show]
   resources :communes
