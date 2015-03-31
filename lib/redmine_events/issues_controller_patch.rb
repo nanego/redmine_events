@@ -2,9 +2,9 @@ require_dependency 'issues_controller'
 
 class IssuesController
 
-  before_filter :authorize, :except => [:index, :flashs, :create_flash, :description, :show]
   before_filter :find_optional_project, :only => [:index, :flashs]
   before_filter :find_issue, :only => [:show, :edit, :update, :description]
+  before_filter :authorize, :except => [:index, :flashs, :create_flash, :description, :show]
 
   def description
     respond_to do |format|
