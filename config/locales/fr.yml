@@ -24,6 +24,7 @@ fr:
   button_generate_flash: Générer un flash
 
   button_create_point_de_situation: "Nouveau Point de Situation"
+  notice_point_successful_create: "Nouveau Point de Situation créé"
 
   time:
     formats:
