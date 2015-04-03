@@ -3,14 +3,19 @@ require_dependency 'issues_controller'
 class IssuesController
 
   before_filter :find_optional_project, :only => [:index, :flashs]
-  before_filter :find_issue, :only => [:show, :edit, :update, :description]
-  before_filter :authorize, :except => [:index, :flashs, :create_flash, :description, :show]
+  before_filter :find_issue, :only => [:show, :edit, :update, :description, :show_flash]
+  before_filter :authorize, :except => [:index, :flashs, :show_flash, :create_flash, :description, :show]
+  append_before_filter :update_issue_description, :only => [:description]
 
   def description
     respond_to do |format|
       format.html { render :html => "flash", :layout => 'pdf.html' }
       format.pdf { render :pdf => "flash", :layout => 'pdf.html' }
     end
+  end
+
+  def show_flash
+    show
   end
 
   def flashs
@@ -154,10 +159,10 @@ class IssuesController
     @flash.description = <<HEADER
       <br />
       <div style="text-align: center;margin-top:10px;">
-        <table border="2" cellpadding="0" cellspacing="0" id="flash_header" style="border: 2px solid rgb(0, 0, 0); box-shadow: rgb(101, 101, 101) 1px 1px 1px 0px; height: 200px; margin: 10px auto auto; text-align: center; width: 80%;">
+        <table border="1" cellpadding="0" cellspacing="0" id="flash_header" style="border: 2px solid rgb(0, 0, 0); box-shadow: rgb(101, 101, 101) 1px 1px 1px 0px; height: 200px; margin: 10px auto auto; text-align: center; width: 98%;">
           <tbody>
             <tr>
-              <td><img alt="" data-rich-file-id="1" src="/system/rich/rich_files/rich_files/000/000/001/original/Logo-Re%CC%81publique-Franc%CC%A7aise.png" style="text-align: center; height: 59px; width: 100px;" /><br style="text-align: center;" />
+              <td><img alt="" data-rich-file-id="1" src="#{request.base_url}/system/rich/rich_files/rich_files/000/000/001/original/Logo-Re%CC%81publique-Franc%CC%A7aise.png" style="text-align: center; height: 59px; width: 100px;" /><br style="text-align: center;" />
               <span style="text-align: center; font-family: arial, helvetica, sans-serif;"><strong>Ministère de l'Écologie, du Développement durable et de l'Énergie<br />
               Ministère du Logement, de l'Égalité des territoires et de la Ruralité<br />
               Service de Défense, de Sécurité et d'Intelligence Économique<br />
@@ -173,12 +178,12 @@ HEADER
 
     @flash.description << <<RESUME
       <div style="text-align: left;"> 
-        <table align="center" border="1" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 75%;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
           <tbody>
             <tr>
               <td>
               <div style="text-align: center;">
-              <div style="text-align: left;"><em>Sources : DGRS (12:62), SPRM (15:65)</em></div>
+              <div style="text-align: left;"><em>Sources : #{@flash.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['source_field'])).join(', ')}</em></div>
               </div>
               <br />
               #{@flash.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))}
@@ -192,7 +197,7 @@ HEADER
 RESUME
 
     @flash.description << <<TITRE
-      <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 80%; background-color: rgb(230, 230, 230);">
+      <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(230, 230, 230);">
         <tbody>
           <tr>
             <td style="text-align: center;"><span style="font-size:18px;">#{@flash.subject}</span></td>
@@ -203,7 +208,7 @@ RESUME
 TITRE
 
     @flash.description << <<DOMAINES
-      <table align="center" border="1" cellpadding="0" cellspacing="0" style="width: 80%; border: 1px solid rgb(0, 0, 0);">
+      <table align="center" border="1" cellpadding="0" cellspacing="0" style="width: 98%; border: 1px solid rgb(0, 0, 0);">
         <tbody>
           <tr>
             <td style="text-align: center;"><strong><span style="font-size:14px;">
@@ -217,7 +222,7 @@ DOMAINES
 
     @flash.description << <<DESCRIPTION
       <div style="text-align: left;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 75%;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 92%;">
           <tbody>
             <tr>
               <td>#{event_description}</td>
@@ -228,6 +233,11 @@ DOMAINES
       <br />
 DESCRIPTION
 
+  end
+
+
+  def update_issue_description
+    @issue.description.gsub! 'src="/system/rich/', 'src="http://localhost:3015/system/rich/'
   end
 
 end
@@ -246,7 +256,7 @@ module Redmine
   module MenuManager
     module MenuHelper
       def render_single_menu_node(item, caption, url, selected)
-        if action_name == "flashs"
+        if action_name == "flashs" || action_name == 'show_flash'
           case caption
             when "Evénements"
               selected = false

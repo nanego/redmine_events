@@ -32,6 +32,12 @@
       <%= select_tag "settings[domain_field]", options_for_select(options, Setting['plugin_redmine_events']['domain_field']) %>
     </td>
   </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_source_field") %> :</th>
+    <td>
+      <%= select_tag "settings[source_field]", options_for_select(options, Setting['plugin_redmine_events']['source_field']) %>
+    </td>
+  </tr>
   </tbody>
 </table>
 
