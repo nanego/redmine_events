@@ -17,5 +17,7 @@ RedmineApp::Application.routes.draw do
   resources :bulletins, only: [:show]
   resources :communes
   get 'flashs/:id', controller: "issues", action: "show_flash", as: "show_flash"
+  get 'bulletins/:id', controller: "issues", action: "show_bulletin", as: "show_bulletin"
+  get 'points/:id', controller: "issues", action: "show_point", as: "show_point"
 end
 

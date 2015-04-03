@@ -3,8 +3,8 @@ require_dependency 'issues_controller'
 class IssuesController
 
   before_filter :find_optional_project, :only => [:index, :flashs]
-  before_filter :find_issue, :only => [:show, :edit, :update, :description, :show_flash]
-  before_filter :authorize, :except => [:index, :flashs, :show_flash, :create_flash, :description, :show]
+  before_filter :find_issue, :only => [:show, :edit, :update, :description, :show_flash, :show_point, :show_bulletin]
+  before_filter :authorize, :except => [:index, :flashs, :show_flash, :show_point, :show_bulletin, :create_flash, :description, :show]
   append_before_filter :update_issue_description, :only => [:description]
 
   def description
@@ -15,6 +15,12 @@ class IssuesController
   end
 
   def show_flash
+    show
+  end
+  def show_point
+    show
+  end
+  def show_bulletin
     show
   end
 
@@ -261,6 +267,22 @@ module Redmine
             when "Evénements"
               selected = false
             when "Flashs"
+              selected = true
+          end
+        end
+        if action_name =~ /bulletin/i
+          case caption
+            when "Evénements"
+              selected = false
+            when /bulletin/i
+              selected = true
+          end
+        end
+        if action_name =~ /point/i
+          case caption
+            when "Evénements"
+              selected = false
+            when "Points de situation"
               selected = true
           end
         end
