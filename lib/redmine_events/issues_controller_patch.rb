@@ -243,7 +243,7 @@ DESCRIPTION
 
 
   def update_issue_description
-    @issue.description.gsub! 'src="/system/rich/', 'src="http://localhost:3015/system/rich/'
+    @issue.description.gsub! 'src="/system/rich/', "src=\"#{request.base_url}/system/rich/"
   end
 
 end
