@@ -31,6 +31,9 @@ fr:
   time:
     formats:
       complete: "%A %d %B %Y à %H:%M"
+  date:
+    formats:
+      complete: "%A %d %B %Y à %H:%M"
 
   settings_logo_ministere: Logo ministère
   select2_custom_fields: Champs utilisant select2
