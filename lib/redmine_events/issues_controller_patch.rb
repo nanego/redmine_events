@@ -148,7 +148,7 @@ class IssuesController
 
     if @flash.save
 
-      @flash.relations.first.relation_type = 'relates'
+      @flash.reload.relations.first.relation_type = 'relates'
       @flash.relations.first.save
 
       @flash.journals.destroy_all
