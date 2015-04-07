@@ -10,10 +10,10 @@
         </fieldset>
     <% end %>
 
-    <fieldset><legend><%= l(:field_description) %></legend>
-    <%= f.text_area :description, :cols => 60, :rows => 10, :class => 'wiki-edit', :no_label => true %>
-    <%= wikitoolbar_for 'issue_description' %>
-
+    <fieldset>
+      <legend><%= l(:field_description) %></legend>
+      <%= f.text_area :description, :cols => 60, :rows => 10, :class => 'wiki-edit', :no_label => true %>
+      <%= wikitoolbar_for 'issue_description' %>
     </fieldset>
 
     <fieldset><legend><%= l(:label_attachment_plural) %></legend>

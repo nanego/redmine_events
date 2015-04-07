@@ -4,10 +4,12 @@ Deface::Override.new :virtual_path  => "issues/new",
                      :text          => <<-EOS
 <script type="text/javascript">
 
+<% consequence_field_id = Setting['plugin_redmine_events']['consequence_field'] %>
+
 $( "p:contains('Nombre de')" ).css( "display", "none" );
 
-$( "#issue_custom_field_values_4" ).change(function() {
-  if($( "#issue_custom_field_values_4" ).val().indexOf("mort") > -1){
+$( "#issue_custom_field_values_<%= consequence_field_id %>" ).change(function() {
+  if($( "#issue_custom_field_values_<%= consequence_field_id %>" ).val().indexOf("mort") > -1){
     $( "p:contains('Nombre de')" ).css( "display", "block" );
   }else{
     $( "p:contains('Nombre de')" ).css( "display", "none" );
