@@ -43,55 +43,11 @@ class PointsController < ApplicationController
   def create
     @project = Project.find(params[:project_id]) if params[:project_id].present?
     build_new_issue_from_params
+
+    @issue.subject = "POINT DE SITUATION"
+
     related_evts = Issue.where("id IN (?)", params[:ids])
-    @issue.subject = "Point de situation du JJ/MM/YYYY à HH:MM"
-    @issue.description ||= ""
-
-
-    major_events = {}
-    related_evts.each do |evt|
-      domaine=evt.custom_field_value(CustomField.find_by_name('Domaines')).first
-      major_events[domaine] ||= {}
-      commune = evt.custom_field_value(CustomField.find_by_name('Commune'))
-      major_events[domaine][commune] ||= []
-      major_events[domaine][commune] << evt
-    end
-
-    @issue.description << "\n# SITUATION GENERALE - FAITS MARQUANTS"
-    major_events.each do |domaine, communes|
-      # @issue.description << "\n## #{domaine}"
-      communes.each do |commune, events|
-        events.each do |event|
-          resume = event.custom_field_value(CustomField.find_by_name('Résumé'))
-          if resume.present?
-            @issue.description << "\n\n* #{event.subject} - #{resume}"
-          end
-        end
-      end
-    end
-
-    @issue.description << "\n"
-
-    events = {}
-    related_evts.each do |evt|
-      evt.custom_field_value(CustomField.find_by_name('Domaines')).each do |domaine|
-        events[domaine] ||= {}
-        commune = evt.custom_field_value(CustomField.find_by_name('Commune'))
-        events[domaine][commune] ||= []
-        events[domaine][commune] << evt
-      end
-    end
-
-    events.each do |domaine, communes|
-      @issue.description << "\n# #{domaine}"
-      communes.each do |commune, events|
-        @issue.description << "\n## #{commune}" if commune.present?
-        events.each do |event|
-          @issue.description << "\n## #{event.subject}" if event.subject.present?
-          @issue.description << "\n#{event.description}" if event.description.present?
-        end
-      end
-    end
+    generate_point_description(related_evts)
 
     @issue.start_date = DateTime.parse(@issue.start_date.to_s)
     @issue.due_date = DateTime.parse(@issue.start_date.to_s)
@@ -118,6 +74,169 @@ class PointsController < ApplicationController
       @point = @issue
       respond_to do |format|
         format.html { render :action => 'index' }
+      end
+    end
+  end
+
+  def generate_point_description(related_evts)
+
+    @issue.description ||= ""
+
+    major_events = {}
+    related_evts.each do |evt|
+      domaine=evt.custom_field_value(CustomField.find_by_name('Domaines')).first
+      major_events[domaine] ||= {}
+      commune = evt.custom_field_value(CustomField.find_by_name('Commune'))
+      major_events[domaine][commune] ||= []
+      major_events[domaine][commune] << evt
+    end
+
+    @issue.description << <<HEADER
+      <br />
+      <div style="text-align: center;margin-top:10px;">
+        <table border="1" cellpadding="0" cellspacing="0" id="flash_header" style="border: 2px solid rgb(0, 0, 0); box-shadow: rgb(101, 101, 101) 1px 1px 1px 0px; height: 200px; margin: 10px auto auto; text-align: center; width: 98%;">
+          <tbody>
+            <tr>
+              <td><img alt="" data-rich-file-id="1" src="#{request.base_url}/system/rich/rich_files/rich_files/000/000/001/original/Logo-Re%CC%81publique-Franc%CC%A7aise.png" style="text-align: center; height: 59px; width: 100px;" /><br style="text-align: center;" />
+              <span style="text-align: center; font-family: arial, helvetica, sans-serif;"><strong>Ministère de l'Écologie, du Développement durable et de l'Énergie<br />
+              Ministère du Logement, de l'Égalité des territoires et de la Ruralité<br />
+              Service de Défense, de Sécurité et d'Intelligence Économique<br />
+              <br />
+              <span style="font-size: 18px;">POINT DE SITUATION N° 084</span></strong><br />
+              du #{ I18n.l Time.now, format: :complete }</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <br />
+HEADER
+
+    @issue.description << <<FAITS_MARQUANTS
+      <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(220, 220, 220);">
+        <tbody>
+          <tr>
+            <td><strong><em><span style="font-size:18px;"> SITUATION GENERALE - PREVISIONS</span></em></strong></td>
+          </tr>
+        </tbody>
+      </table>
+FAITS_MARQUANTS
+
+
+
+
+
+
+    @issue.description << <<FAITS_MARQUANTS_RESUMES_BEGIN
+    <div style="text-align: left;"> 
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
+    <tbody>
+    <tr>
+    <td><strong>Météorologie et crues</strong><br />
+			<br />
+      <strong>Faits marquants</strong>
+FAITS_MARQUANTS_RESUMES_BEGIN
+
+    major_events.each do |domaine, communes|
+      # @issue.description << "\n## #{domaine}"
+      communes.each do |commune, events|
+        events.each do |event|
+          resume = event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))
+          if resume.present? && event.priority_id >= 3
+            @issue.description << <<LIST_FAITS_MARQUANTS
+  <ul>
+	  <li>#{event.subject} - #{resume}</li>
+    </ul>
+LIST_FAITS_MARQUANTS
+          end
+        end
+      end
+    end
+
+    @issue.description << <<FAITS_MARQUANTS_RESUMES_END
+			</td>
+    </tr>
+	</tbody>
+    </table>
+</div>
+FAITS_MARQUANTS_RESUMES_END
+
+
+    @issue.description << <<INCIDENTS
+<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(220, 220, 220);">
+	<tbody>
+		<tr>
+			<td><strong><em><span style="font-size: 18px;"> PERTURBATIONS, INCIDENTS, ACCIDENTS </span></em></strong></td>
+		</tr>
+	</tbody>
+</table>
+<br/>
+INCIDENTS
+
+    @issue.description << <<DOMAINES
+<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(240, 240, 240);">
+	<tbody>
+		<tr>
+			<td><strong><span style="font-size:16px;"> Environnement, risques industriels</span></strong></td>
+		</tr>
+	</tbody>
+</table>
+<BR/>
+DOMAINES
+
+    @issue.description << <<TYPES
+<table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
+	<tbody>
+		<tr>
+			<td><strong><span style="background-color:#FFD700;">Accidents avec mort(s) et/ou blessé(s)</span><br />
+			<br />
+			Marne (51) :</strong>
+
+			<ul>
+				<li>Dans la Marne (51), explosion dans l'enceinte de la Société Pipeline Méditerranée Rhône sur le site pétrochimique de Fos-sur-Mer (13) (Alerte) - Une explosion de cause inconnue s'est produite sur le site pétrochimique de Fos-sur- Mer au niveau d'une salle de commande de la Société Pipeline Méditerranée Rhône (SPMR) sans faire de victime. Les pompes sont à l'arrêt pour une durée indéterminée.</li>
+			</ul>
+			<strong><span style="background-color: rgb(255, 215, 0);">Accidents ou incidents sans victime humaine</span></strong><br />
+			<br />
+			<strong>Marne (51) :</strong>
+
+			<ul>
+				<li>Dans la Marne (51), explosion dans l'enceinte de la Société Pipeline Méditerranée Rhône sur le site pétrochimique de Fos-sur-Mer (13) (Alerte) - Une explosion de cause inconnue s'est produite sur le site pétrochimique de Fos-sur- Mer au niveau d'une salle de commande de la Société Pipeline Méditerranée Rhône (SPMR) sans faire de victime. Les pompes sont à l'arrêt pour une durée indéterminée.</li>
+			</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>
+TYPES
+
+    events = {}
+    related_evts.each do |evt|
+      evt.custom_field_value(CustomField.find_by_name('Domaines')).each do |domaine|
+        events[domaine] ||= {}
+        commune = evt.custom_field_value(CustomField.find_by_name('Commune'))
+        events[domaine][commune] ||= []
+        events[domaine][commune] << evt
+      end
+    end
+
+    events.each do |domaine, communes|
+      @issue.description << <<DOMAINES
+<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(240, 240, 240);">
+	<tbody>
+		<tr>
+			<td><strong><span style="font-size:16px;"> #{domaine}</span></strong></td>
+		</tr>
+	</tbody>
+</table>
+<BR/>
+DOMAINES
+      communes.each do |commune, events|
+        @issue.description << "<strong>#{commune} (51) :</strong>" if commune.present?
+        @issue.description << "<ul>"
+        events.each do |event|
+          resume = event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))
+          @issue.description << "<br/><li> #{event.subject}</li>" if event.subject.present?
+          @issue.description << "<br/>#{resume || event.description}" if (resume.present? || event.description.present?)
+        end
+        @issue.description << "</ul>"
       end
     end
   end

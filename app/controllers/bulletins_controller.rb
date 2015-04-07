@@ -206,12 +206,19 @@ HEADER
       </table>
 FAITS_MARQUANTS
 
+
+
+
+
+
     @issue.description << <<FAITS_MARQUANTS_RESUMES_BEGIN
-      <div style="text-align: left;"> 
-        <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
-          <tbody>
-            <tr>
-              <td>
+    <div style="text-align: left;"> 
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
+    <tbody>
+    <tr>
+    <td><strong>Météorologie et crues</strong><br />
+			<br />
+      <strong>Faits marquants</strong>
 FAITS_MARQUANTS_RESUMES_BEGIN
 
     major_events.each do |domaine, communes|
@@ -220,23 +227,70 @@ FAITS_MARQUANTS_RESUMES_BEGIN
         events.each do |event|
           resume = event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))
           if resume.present? && event.priority_id >= 3
-            @issue.description << "* #{event.subject} - #{resume}"
+            @issue.description << <<LIST_FAITS_MARQUANTS
+  <ul>
+	  <li>#{event.subject} - #{resume}</li>
+    </ul>
+LIST_FAITS_MARQUANTS
           end
         end
       end
     end
 
     @issue.description << <<FAITS_MARQUANTS_RESUMES_END
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <br />
+			</td>
+    </tr>
+	</tbody>
+    </table>
+</div>
 FAITS_MARQUANTS_RESUMES_END
 
 
+    @issue.description << <<INCIDENTS
+<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(220, 220, 220);">
+	<tbody>
+		<tr>
+			<td><strong><em><span style="font-size: 18px;"> PERTURBATIONS, INCIDENTS, ACCIDENTS </span></em></strong></td>
+		</tr>
+	</tbody>
+</table>
+<br/>
+INCIDENTS
 
-    @issue.description << "\n"
+    @issue.description << <<DOMAINES
+<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(240, 240, 240);">
+	<tbody>
+		<tr>
+			<td><strong><span style="font-size:16px;"> Environnement, risques industriels</span></strong></td>
+		</tr>
+	</tbody>
+</table>
+<BR/>
+DOMAINES
+
+    @issue.description << <<TYPES
+<table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
+	<tbody>
+		<tr>
+			<td><strong><span style="background-color:#FFD700;">Accidents avec mort(s) et/ou blessé(s)</span><br />
+			<br />
+			Marne (51) :</strong>
+
+			<ul>
+				<li>Dans la Marne (51), explosion dans l'enceinte de la Société Pipeline Méditerranée Rhône sur le site pétrochimique de Fos-sur-Mer (13) (Alerte) - Une explosion de cause inconnue s'est produite sur le site pétrochimique de Fos-sur- Mer au niveau d'une salle de commande de la Société Pipeline Méditerranée Rhône (SPMR) sans faire de victime. Les pompes sont à l'arrêt pour une durée indéterminée.</li>
+			</ul>
+			<strong><span style="background-color: rgb(255, 215, 0);">Accidents ou incidents sans victime humaine</span></strong><br />
+			<br />
+			<strong>Marne (51) :</strong>
+
+			<ul>
+				<li>Dans la Marne (51), explosion dans l'enceinte de la Société Pipeline Méditerranée Rhône sur le site pétrochimique de Fos-sur-Mer (13) (Alerte) - Une explosion de cause inconnue s'est produite sur le site pétrochimique de Fos-sur- Mer au niveau d'une salle de commande de la Société Pipeline Méditerranée Rhône (SPMR) sans faire de victime. Les pompes sont à l'arrêt pour une durée indéterminée.</li>
+			</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>
+TYPES
 
     events = {}
     related_evts.each do |evt|
@@ -249,13 +303,25 @@ FAITS_MARQUANTS_RESUMES_END
     end
 
     events.each do |domaine, communes|
-      @issue.description << "\n# #{domaine}"
+      @issue.description << <<DOMAINES
+<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(240, 240, 240);">
+	<tbody>
+		<tr>
+			<td><strong><span style="font-size:16px;"> #{domaine}</span></strong></td>
+		</tr>
+	</tbody>
+</table>
+<BR/>
+DOMAINES
       communes.each do |commune, events|
-        @issue.description << "\n## #{commune}" if commune.present?
+        @issue.description << "<strong>#{commune} (51) :</strong>" if commune.present?
+        @issue.description << "<ul>"
         events.each do |event|
-          @issue.description << "\n## #{event.subject}" if event.subject.present?
-          @issue.description << "\n#{event.description}" if event.description.present?
+          resume = event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))
+          @issue.description << "<br/><li> #{event.subject}</li>" if event.subject.present?
+          @issue.description << "<br/>#{resume || event.description}" if (resume.present? || event.description.present?)
         end
+        @issue.description << "</ul>"
       end
     end
   end
