@@ -21,9 +21,10 @@ fr:
   label_points_new: Nouveau point de situation
 
   label_flashs: Flashs
-  button_generate_flash: Générer un flash
+  button_generate_flash: Préparer un flash
   download_pdf: Télécharger en PDF
   button_submit: Enregistrer
+  send_flash: Emettre le flash
 
   button_create_point_de_situation: "Nouveau Point de Situation"
   notice_point_successful_create: "Nouveau Point de Situation créé"

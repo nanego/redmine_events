@@ -34,7 +34,6 @@ class BulletinsController < ApplicationController
 
     scope = @project ? @project.issues.visible : Issue.visible
     @bulletin = Issue.new # for adding bulletins inline
-    @bulletin.subject = "Bulletin quotidien CMVOA N° "
     @bulletin.start_date = 1.day.ago.strftime("%Y-%m-%d 08:30")
     @bulletin.due_date = Time.now.strftime("%Y-%m-%d 08:30")
     # @bulletin.description = "Bulletin quotidien"
@@ -54,8 +53,12 @@ class BulletinsController < ApplicationController
 
     @issue.start_date = DateTime.parse(@issue.start_date.to_s)
     @issue.due_date = DateTime.parse(@issue.start_date.to_s)
+    @issue.subject = "Bulletin quotidien CMVOA N°#{@issue.id}"
 
     if @issue.save
+
+      @issue.subject = "Bulletin quotidien CMVOA N°#{@issue.id}"
+      @issue.save
 
       related_evts.each do |evt|
         @relation = IssueRelation.new(:relation_type => 'relates')

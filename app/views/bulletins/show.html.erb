@@ -36,13 +36,6 @@
         <% end %>
         </p>
 
-  <% if @relations.present? || User.current.allowed_to?(:manage_issue_relations, @project) %>
-    <hr />
-    <div id="relations">
-      <%= render :partial => 'issues/relations' %>
-    </div>
-  <% end %>
-
 <!-- class="attributes">
 <%= issue_fields_rows do |rows|
   rows.left l(:field_status), h(@issue.status.name), :class => 'status'
@@ -97,7 +90,6 @@ end %>
 <%= link_to_attachments @issue, :thumbnails => true %>
 <% end -%>
 
-<%= call_hook(:view_issues_show_description_bottom, :issue => @issue) %>
 
 <% if !@issue.leaf? || User.current.allowed_to?(:manage_subtasks_in_bulletins, @project) %>
 <hr />
@@ -110,9 +102,15 @@ end %>
 </div>
 <% end %>
 
-
+  <% if @relations.present? || User.current.allowed_to?(:manage_issue_relations, @project) %>
+    <hr />
+    <div id="relations">
+      <%= render :partial => 'issues/relations' %>
+    </div>
+  <% end %>
 
 </div>
+
 
 <% if @changesets.present? %>
 <div id="issue-changesets">

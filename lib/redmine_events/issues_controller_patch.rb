@@ -153,7 +153,7 @@ class IssuesController
 
       @flash.journals.destroy_all
 
-      redirect_to issue_path(@flash)
+      redirect_to show_flash_path(@flash)
     else
       redirect_to issue_path(@original_issue)
     end
