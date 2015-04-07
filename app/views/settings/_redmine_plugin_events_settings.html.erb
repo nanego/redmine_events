@@ -9,6 +9,13 @@
 <table>
   <tbody>
   <tr>
+    <th style="text-align: right;"><%= l("settings_logo_ministere") %></th>
+    <td>
+      <%= text_area_tag "settings[logo_ministere]", Setting['plugin_redmine_events']['logo_ministere'] %>
+      <%= wikitoolbar_for 'settings_logo_ministere' %>
+    </td>
+  </tr>
+  <tr>
     <th style="text-align: right;"><%= l("select2_custom_fields") %> :</th>
     <td>
       <%= select_tag "settings[select2_fields]", options_for_select(options, Setting['plugin_redmine_events']['select2_fields']), :id => "settings_select2_fields", :multiple => true, :size => 10 %>

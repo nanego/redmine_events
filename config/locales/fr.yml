@@ -31,3 +31,10 @@ fr:
   time:
     formats:
       complete: "%A %d %B %Y à %H:%M"
+
+  settings_logo_ministere: Logo ministère
+  select2_custom_fields: Champs utilisant select2
+  setting_autocompte_communes_field: Champ Communes
+  setting_summary_field: Champ Résumé
+  setting_domain_field: Champ Domaine
+  setting_source_field: Champ multivalué Sources

@@ -168,7 +168,7 @@ class IssuesController
         <table border="1" cellpadding="0" cellspacing="0" id="flash_header" style="border: 2px solid rgb(0, 0, 0); box-shadow: rgb(101, 101, 101) 1px 1px 1px 0px; height: 200px; margin: 10px auto auto; text-align: center; width: 98%;">
           <tbody>
             <tr>
-              <td><img alt="" data-rich-file-id="1" src="#{request.base_url}/system/rich/rich_files/rich_files/000/000/001/original/Logo-Re%CC%81publique-Franc%CC%A7aise.png" style="text-align: center; height: 59px; width: 100px;" /><br style="text-align: center;" />
+              <td>#{Setting['plugin_redmine_events']['logo_ministere']}<br />
               <span style="text-align: center; font-family: arial, helvetica, sans-serif;"><strong>Ministère de l'Écologie, du Développement durable et de l'Énergie<br />
               Ministère du Logement, de l'Égalité des territoires et de la Ruralité<br />
               Service de Défense, de Sécurité et d'Intelligence Économique<br />
