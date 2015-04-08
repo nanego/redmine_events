@@ -5,6 +5,12 @@ Deface::Override.new :virtual_path  => "issues/_form",
 <p style="display:none;"> <%= f.select :tracker_id, @issue.project.trackers.collect {|t| [t.name, t.id]}, {:required => true} %>  </p>
 EOS
 
+Deface::Override.new :virtual_path  => "issues/_form",
+                     :name          => "hide-description-field",
+                     :replace       => 'erb[silent]:contains("if @issue.safe_attribute? \'description\'")',
+                     :text          => <<-EOS
+<% if (@issue.safe_attribute? 'description') && @issue.tracker.name.include?('Flash')  %>
+EOS
 
 Deface::Override.new :virtual_path  => "issues/_form",
                      :name          => "hide-private-field",
