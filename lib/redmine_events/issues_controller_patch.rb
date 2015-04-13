@@ -194,8 +194,11 @@ HEADER
               </div>
               <br />
               #{@flash.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))}
-              <br /><br />
-              <span style="font-size:12px;"><em>Cabinet MEDDE informé.</em></span></td>
+              <br />
+              #{@flash.custom_field_value(CustomField.find(5)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Cabinet informé.</em></span>".html_safe : ""}
+              #{@flash.custom_field_value(CustomField.find(15)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evènement médiatisé.</em></span>".html_safe : ""}
+              #{@flash.custom_field_value(CustomField.find(14)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -207,7 +210,7 @@ RESUME
       <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(230, 230, 230);">
         <tbody>
           <tr>
-            <td style="text-align: center;"><span style="font-size:18px;">#{@flash.subject}</span></td>
+            <td style="text-align: center;"><span style="font-size:18px;">#{@flash.subject}, #{@flash.custom_field_value(CustomField.find(11)).present? ? (@flash.custom_field_value(CustomField.find(11)) + ' (' + Commune.find_by_name(@flash.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' )  : @flash.custom_field_value(CustomField.find(9))}</span></td>
           </tr>
         </tbody>
       </table>
@@ -232,7 +235,18 @@ DOMAINES
         <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 92%;">
           <tbody>
             <tr>
-              <td>#{event_description}</td>
+              <td><b>
+                #{@flash.custom_field_value(CustomField.find(11)).present? ? (Commune.find_by_name(@flash.custom_field_value(CustomField.find(11))).department_name.to_s + ' (' + Commune.find_by_name(@flash.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' )  : @flash.custom_field_value(CustomField.find(9))} :</b></td>
+            </tr>
+            <tr>
+              <td>
+                #{@flash.custom_field_value(CustomField.find(16))}<br/>
+                <ul>
+                  #{@flash.custom_field_value(CustomField.find(7)).to_i > 0 ? ('<li>'+@flash.custom_field_value(CustomField.find(7)).to_s+' morts.</li>').html_safe : ''}
+                  #{@flash.custom_field_value(CustomField.find(6)).to_i > 0 ? ('<li>'+@flash.custom_field_value(CustomField.find(6)).to_s+' blessés.</li>').html_safe : ''}
+                </ul>
+                #{@flash.custom_field_value(CustomField.find(17))}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -245,7 +259,7 @@ DESCRIPTION
 
   def update_issue_description
     @issue.description.gsub! 'src="/system/rich/', "src=\"#{request.base_url}/system/rich/"
-    @issue.description.gsub! 'https', 'http'
+    # @issue.description.gsub! 'https', 'http'
   end
 
 end

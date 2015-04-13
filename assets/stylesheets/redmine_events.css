@@ -18,3 +18,7 @@ p#parent_issue { display:none; }
 table.list td, table.list th {
     text-align: left;
 }
+
+.cke_editable{
+    min-width: 0px;
+}
