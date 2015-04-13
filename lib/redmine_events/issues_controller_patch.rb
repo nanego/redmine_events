@@ -244,6 +244,7 @@ DESCRIPTION
 
   def update_issue_description
     @issue.description.gsub! 'src="/system/rich/', "src=\"#{request.base_url}/system/rich/"
+    @issue.description.gsub! 'https', 'http'
   end
 
 end
