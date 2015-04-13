@@ -27,6 +27,7 @@ class IssuesController
   def flashs
 
     retrieve_query
+    # @query.filters.merge!({"tracker_id"=>{:operator=>"=", :values=>["#{Tracker.find_by_name("Flash").id}"]}})
     @query.filters = {"tracker_id"=>{:operator=>"=", :values=>["#{Tracker.find_by_name("Flash").id}"]}}
     sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
     sort_update(@query.sortable_columns)
@@ -247,16 +248,6 @@ DESCRIPTION
     @issue.description.gsub! 'https', 'http'
   end
 
-end
-
-require_dependency 'issue_query'
-class IssueQuery < Query
-  class_attribute :context
-  def default_columns_names
-    @default_columns_names ||= begin
-      default_columns = [:id, :priority, :subject, :cf_2, :cf_1, :created_on]
-    end
-  end
 end
 
 module Redmine
