@@ -14,3 +14,7 @@ div.wiki table, div.wiki td, div.wiki th {
 /* (could be hidden with permissions, but not for admins) */
 div#issue_tree, div#issue_tree + hr { display:none; }
 p#parent_issue { display:none; }
+
+table.list td, table.list th {
+    text-align: left;
+}
