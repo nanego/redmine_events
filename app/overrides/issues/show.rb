@@ -50,6 +50,15 @@ Deface::Override.new :virtual_path  => "issues/show",
                      :remove        => 'erb[loud]:contains("f.link_to \'Atom\'")'
 
 Deface::Override.new :virtual_path  => "issues/show",
+                     :name          => "hide_first_description_separator",
+                     :surround      => 'hr:first',
+                     :text          => "<div style='display:<%= (@issue.present? && @issue.tracker.name == 'Flash') ? 'block':'none' %>;'><%= render_original %></div>"
+Deface::Override.new :virtual_path  => "issues/show",
+                     :name          => "hide_description",
+                     :surround        => 'div.description',
+                     :text          => "<div style='display:<%= (@issue.present? && @issue.tracker.name == 'Flash') ? 'block':'none' %>;'><%= render_original %></div>"
+
+Deface::Override.new :virtual_path  => "issues/show",
                      :name          => "replace_pdf_export",
                      :replace       => 'erb[loud]:contains("f.link_to \'PDF\'")',
                      :text          => <<EOS
@@ -62,6 +71,6 @@ EOS
 
 Deface::Override.new :virtual_path  => "issues/show",
                      :name          => "add_javascript_to_edit_issue_form",
-                     :insert_after  => "div.wiki",
+                     :insert_after  => 'erb[loud]:contains("context_menu")',
                      :partial       => "issues/add_script_to_form"
 

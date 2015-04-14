@@ -2,7 +2,7 @@ require_dependency 'issue_query'
 class IssueQuery < Query
   class_attribute :context
   def default_event_columns_names
-    @default_columns_names ||=  [:id, :priority, :subject, :cf_2, :cf_1, :cf_9, :updated_on]  # sources, domaines, departement
+    @default_columns_names ||=  [:id, :subject, :cf_1, :cf_9, :updated_on]  # domaines, departement
   end
 
   def default_flash_columns_names
@@ -22,7 +22,7 @@ class IssueQuery < Query
         _default_columns_names = default_event_columns_names
       when filters.include_hash?({"tracker_id"=>{:operator=>"=", :values=>["#{Tracker.where("trackers.name like '%Bulletin%'").first.id}"]}})
         _default_columns_names = default_bulletins_columns_names
-      when filters.include_hash?({"tracker_id"=>{:operator=>"=", :values=>["#{Tracker.where("trackers.name like '%Bulletin%'").first.id}"]}})
+      when filters.include_hash?({"tracker_id"=>{:operator=>"=", :values=>["#{Tracker.where("trackers.name like '%Point%'").first.id}"]}})
         _default_columns_names = default_bulletins_columns_names
       else
         _default_columns_names = default_columns_names

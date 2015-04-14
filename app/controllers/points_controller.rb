@@ -31,6 +31,7 @@ class PointsController < ApplicationController
     sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
     sort_update(@query.sortable_columns)
     @query.sort_criteria = sort_criteria.to_a
+    @query.filters = {"tracker_id"=>{:operator=>"=", :values=>["#{Tracker.where("trackers.name like '%Point%'").first.id}"]}}
 
     scope = @project ? @project.issues.visible : Issue.visible
     @points = scope.includes([:author, :project]).

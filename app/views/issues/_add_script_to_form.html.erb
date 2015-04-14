@@ -1,18 +1,31 @@
 <script type="text/javascript">
 
-  <% consequence_field_id = Setting['plugin_redmine_events']['consequence_field'] %>
-
-  $( "p:contains('Nombre de')" ).css( "display", "none" );
-
-  $( "#issue_custom_field_values_<%= consequence_field_id %>" ).change(function() {
-    if($( "#issue_custom_field_values_<%= consequence_field_id %>" ).val().indexOf("mort") > -1){
-      $( "p:contains('Nombre de')" ).css( "display", "block" );
-    }else{
-      $( "p:contains('Nombre de')" ).css( "display", "none" );
-    }
-  });
-
   $(function() {
+
+    <% consequence_field_id = Setting['plugin_redmine_events']['consequence_field'] %>
+    $( "p:contains('Nombre de')" ).css( "display", "none" );
+    $( document ).on('change', "#issue_custom_field_values_<%= consequence_field_id %>", function() {
+      console.log('consequence has changed');
+      if($( "#issue_custom_field_values_<%= consequence_field_id %>" ).val().indexOf("mort") > -1){
+        $( "p:contains('Nombre de')" ).css( "display", "block" );
+      }else{
+        $( "p:contains('Nombre de')" ).css( "display", "none" );
+      }
+    });
+    $("#issue_custom_field_values_<%= consequence_field_id %>").change();
+
+    // summary_field_id = Setting['plugin_redmine_events']['summary_field'] # hard coded = 4
+    $( "p:contains('Résumé')" ).css( "display", "none" );
+    $( document ).on('change', "#issue_priority_id", function() {
+      if($( "#issue_priority_id" ).val() > 2){
+        $( "p:contains('Résumé')"  ).css( "display", "block" );
+      }else{
+        $( "p:contains('Résumé')"  ).css( "display", "none" );
+      }
+    });
+    $("#issue_priority_id").change();
+
+
     <% Setting['plugin_redmine_events']['select2_fields'].each do |custom_field_id| %>
     $('#issue_custom_field_values_<%= custom_field_id %>').select2({
       containerCss: {minWidth: '95%'}
@@ -26,6 +39,17 @@
       source: "/communes"
     });
     <% end %>
+
+    $(document).on('change', '#content', function(){
+      $( "span.cke_bottom" ).css( "display", "none" );
+    }).change();
+    $( "span.cke_bottom" ).css( "display", "none" );
+
+    $('#update').bind('display', function(e) {
+      alert( "display has changed to :"+$(this).attr('style') );
+    });
+
+
   });
 
 </script>

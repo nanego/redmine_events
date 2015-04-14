@@ -6,6 +6,7 @@ Rails.application.config.to_prepare do
   require_dependency 'redmine_events/queries_helper_patch'
   require_dependency 'redmine_events/less_mail_patch'
   require_dependency 'redmine_events/issue_query_patch'
+  require_dependency 'redmine_events/issues_helper_patch'
 end
 
 
