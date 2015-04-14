@@ -52,11 +52,11 @@ Deface::Override.new :virtual_path  => "issues/show",
 Deface::Override.new :virtual_path  => "issues/show",
                      :name          => "hide_first_description_separator",
                      :surround      => 'hr:first',
-                     :text          => "<div style='display:<%= (@issue.present? && @issue.tracker.name == 'Flash') ? 'block':'none' %>;'><%= render_original %></div>"
+                     :text          => "<div style='display:<%= (@issue.present? && @issue.tracker.name != 'Fiche événement') ? 'block':'none' %>;'><%= render_original %></div>"
 Deface::Override.new :virtual_path  => "issues/show",
                      :name          => "hide_description",
                      :surround        => 'div.description',
-                     :text          => "<div style='display:<%= (@issue.present? && @issue.tracker.name == 'Flash') ? 'block':'none' %>;'><%= render_original %></div>"
+                     :text          => "<div style='display:<%= (@issue.present? && @issue.tracker.name != 'Fiche événement') ? 'block':'none' %>;'><%= render_original %></div>"
 
 Deface::Override.new :virtual_path  => "issues/show",
                      :name          => "replace_pdf_export",

@@ -241,8 +241,8 @@ DOMAINES
             <tr>
               <td>
                 #{original_issue.custom_field_value(CustomField.find(16))}<br/>
-                #{original_issue.custom_field_value(CustomField.find(7)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+original_issue.custom_field_value(CustomField.find(7)).to_s+' morts.</span>').html_safe : ''}<br/>
-                #{original_issue.custom_field_value(CustomField.find(6)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+original_issue.custom_field_value(CustomField.find(6)).to_s+' blessés.</span>').html_safe : ''}<br/>
+                #{original_issue.custom_field_value(CustomField.find(7)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+original_issue.custom_field_value(CustomField.find(7)).to_s+' morts.</span><br/>').html_safe : ''}
+                #{original_issue.custom_field_value(CustomField.find(6)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+original_issue.custom_field_value(CustomField.find(6)).to_s+' blessés.</span><br/>').html_safe : ''}
                 #{original_issue.custom_field_value(CustomField.find(17))}
               </td>
             </tr>

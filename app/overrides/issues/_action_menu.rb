@@ -10,6 +10,6 @@ Deface::Override.new :virtual_path  => "issues/_action_menu",
                      :insert_top    => "div.contextual",
                      :text          => <<-EOS
 <% if @issue.tracker.name =~ /flash/i %>
-  <%= link_to l(:send_flash), description_issue_path(@issue, format: :pdf), 'download'=>"Flash_"+@issue.id.to_s+".pdf", :class => 'icon icon-report' %>
+  <%= link_to l(:send_flash), description_issue_path(@issue, format: :html), :class => 'icon icon-report' %>
 <% end %>
 EOS
