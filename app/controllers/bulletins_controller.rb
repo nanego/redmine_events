@@ -311,7 +311,7 @@ TYPES_START
             #{event.custom_field_value(CustomField.find(16)).present? ? event.custom_field_value(CustomField.find(16)) : event.custom_field_value(CustomField.find(4))}<br/>
             #{event.custom_field_value(CustomField.find(7)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+event.custom_field_value(CustomField.find(7)).to_s+' morts.</span><br/>').html_safe : ''}
             #{event.custom_field_value(CustomField.find(6)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+event.custom_field_value(CustomField.find(6)).to_s+' blessés.</span><br/>').html_safe : ''}
-
+            #{event.custom_field_value(CustomField.find(17))}
 
 TYPES_CONTENT
 

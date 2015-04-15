@@ -144,10 +144,18 @@ class IssuesController
     @flash = Issue.new
     @flash.copy_from(@original_issue, :attachments => nil, :subtasks => nil)
     @flash.tracker = Tracker.find_by_name('Flash')
+    @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? (@original_issue.custom_field_value(CustomField.find(11)) + ' (' + Commune.find_by_name(@original_issue.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' )  : @original_issue.custom_field_value(CustomField.find(9))}"
 
     generate_flash_description(@original_issue)
 
+    @flash.description.gsub! "src='/plugin_assets/", "src='#{request.base_url}/plugin_assets/"
+    @flash.description.gsub! 'src="/system/rich/', "src=\"#{request.base_url}/system/rich/"
+
+
     if @flash.save
+
+      @flash.description.gsub! 'FLASH CMVOA N°025', "FLASH CMVOA N°#{@flash.id}"
+      @flash.save
 
       @flash.reload.relations.first.relation_type = 'relates'
       @flash.relations.first.save
@@ -210,7 +218,7 @@ RESUME
       <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(230, 230, 230);">
         <tbody>
           <tr>
-            <td style="text-align: center;"><span style="font-size:18px;">#{@flash.subject}, #{original_issue.custom_field_value(CustomField.find(11)).present? ? (original_issue.custom_field_value(CustomField.find(11)) + ' (' + Commune.find_by_name(original_issue.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' )  : original_issue.custom_field_value(CustomField.find(9))}</span></td>
+            <td style="text-align: center;"><span style="font-size:18px;">#{@flash.subject}</span></td>
           </tr>
         </tbody>
       </table>

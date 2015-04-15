@@ -2,7 +2,7 @@ require_dependency 'issue_query'
 class IssueQuery < Query
   class_attribute :context
   def default_event_columns_names
-    @default_columns_names ||=  [:id, :subject, :cf_1, :cf_9, :updated_on]  # domaines, departement
+    @default_columns_names ||=  [:id, :subject, :cf_9, :cf_1, :updated_on]  # domaines, departement
   end
 
   def default_flash_columns_names
