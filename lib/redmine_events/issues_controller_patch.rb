@@ -151,6 +151,8 @@ class IssuesController
     @flash.description.gsub! "src='/plugin_assets/", "src='#{request.base_url}/plugin_assets/"
     @flash.description.gsub! 'src="/system/rich/', "src=\"#{request.base_url}/system/rich/"
 
+    @flash.description.gsub! 'src="http:', 'src="https:'
+    @flash.description.gsub! "src='http:", "src='https:"
 
     if @flash.save
 

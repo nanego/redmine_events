@@ -49,13 +49,14 @@ class BulletinsController < ApplicationController
     @project = Project.find(params[:project_id]) if params[:project_id].present?
     build_new_issue_from_params
 
-    related_evts = Issue.joins(:tracker).where("trackers.name LIKE '%Fiche %'")
-
     @issue.start_date = DateTime.parse(params['issue']['start_date'])
     @issue.due_date = DateTime.parse(params['issue']['due_date'])
 
-    generate_bulletin_description(related_evts)
+    related_evts = Issue.joins(:tracker)
+                        .where("trackers.name LIKE '%Fiche %'")
+                        .where("updated_on >= ? AND updated_on <= ?", @issue.start_date, @issue.due_date)
 
+    generate_bulletin_description(related_evts)
 
     @issue.subject = "Bulletin quotidien CMVOA N°#{@issue.id}"
 
