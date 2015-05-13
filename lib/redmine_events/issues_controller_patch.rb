@@ -144,7 +144,12 @@ class IssuesController
     @flash = Issue.new
     @flash.copy_from(@original_issue, :attachments => nil, :subtasks => nil)
     @flash.tracker = Tracker.find_by_name('Flash')
-    @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? (@original_issue.custom_field_value(CustomField.find(11)) + ' (' + Commune.find_by_name(@original_issue.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' )  : @original_issue.custom_field_value(CustomField.find(9))}"
+    commune = Commune.find_by_name(@original_issue.custom_field_value(CustomField.find(11)))
+    if commune.present?
+      @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? "#{commune.name} ( #{commune.department.to_s.rjust(2, '0')} )" : @original_issue.custom_field_value(CustomField.find(9))}"
+    else
+      @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? (@original_issue.custom_field_value(CustomField.find(11)) )  : @original_issue.custom_field_value(CustomField.find(9))}"
+    end
 
     generate_flash_description(@original_issue)
 
@@ -172,7 +177,10 @@ class IssuesController
   end
 
   def generate_flash_description(original_issue)
+
     event_description = @flash.description
+    commune = Commune.find_by_name(original_issue.custom_field_value(CustomField.find(11)))
+
     @flash.description = <<HEADER
       <br />
       <div style="text-align: center;margin-top:10px;">
@@ -245,8 +253,11 @@ DOMAINES
         <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 92%;">
           <tbody>
             <tr>
-              <td><b>
-                #{original_issue.custom_field_value(CustomField.find(11)).present? ? (Commune.find_by_name(original_issue.custom_field_value(CustomField.find(11))).department_name.to_s + ' (' + Commune.find_by_name(original_issue.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' )  : original_issue.custom_field_value(CustomField.find(9))} :</b></td>
+              <td>
+                <b>
+                  #{commune.present? ? (commune.department_name.to_s + ' (' + commune.department.to_s.rjust(2, '0') + ')' )  : original_issue.custom_field_value(CustomField.find(9))} :
+                </b>
+              </td>
             </tr>
             <tr>
               <td>
