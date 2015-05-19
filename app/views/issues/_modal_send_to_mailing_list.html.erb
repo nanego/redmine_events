@@ -1,0 +1,17 @@
+<h3 class="title">Emettre le <%= @issue.tracker.name.downcase %></h3>
+
+<div class="actions_links">
+  <div>
+    <p>
+      Le <%= @issue.tracker.name.downcase %> sera envoyé par email à tous les utilisateurs. Par la suite, il serait possible de définir des listes de diffusion afin de sélectionner les destinataires.
+    </p>
+    <%= link_to "Envoyer le #{@issue.tracker.name.downcase}", issue_send_flash_path(@issue),
+                :class => 'icon icon-report',
+                :method => 'post',
+                :remote => true %>
+  </div>
+</div>
+
+<p class="buttons">
+  <%= submit_tag 'Annuler', :name => nil, :onclick => "hideModal(this);", :type => 'button', :id=> 'button_apply_projects' %>
+</p>

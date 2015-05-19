@@ -13,6 +13,7 @@ RedmineApp::Application.routes.draw do
     member do
       get :description
     end
+    post :send_flash
   end
   resources :bulletins, only: [:show]
   resources :communes

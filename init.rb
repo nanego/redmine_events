@@ -8,6 +8,7 @@ Rails.application.config.to_prepare do
   require_dependency 'redmine_events/issue_query_patch'
   require_dependency 'redmine_events/issues_helper_patch'
   require_dependency 'redmine_events/issue_patch'
+  require_dependency 'redmine_events/mailer_patch'
 end
 
 
@@ -19,6 +20,7 @@ Redmine::Plugin.register :redmine_events do
   url 'http://example.com/path/to/plugin'
   author_url 'http://example.com/about'
   requires_redmine_plugin :redmine_base_select2, :version_or_higher => '0.0.1'
+  requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
   permission :points, { :points => [:index] }, :public => true
   permission :bulletins, { :bulletins => [:index] }, :public => true
   permission :flashs, { :issues => [:flashs] }, :public => true
