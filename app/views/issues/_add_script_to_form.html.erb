@@ -32,12 +32,49 @@
     });
     <% end %>
 
+    /* Communes & Depatments */
     <% commune_field_id = Setting['plugin_redmine_events']['autocompte_communes_field']
-      if commune_field_id.present? %>
-    $('#issue_custom_field_values_<%= commune_field_id %>').autocomplete({
-      minLength: 2,
-      source: "/communes"
-    });
+       department_field_id = Setting['plugin_redmine_events']['autocompte_department_field'] %>
+
+    <% if commune_field_id.present? %>
+
+    function xinspect(o,i){
+      if(typeof i=='undefined')i='';
+      if(i.length>50)return '[MAX ITERATIONS]';
+      var r=[];
+      for(var p in o){
+        var t=typeof o[p];
+        r.push(i+'"'+p+'" ('+t+') => '+(t=='object' ? 'object:'+xinspect(o[p],i+'  ') : o[p]+''));
+      }
+      return r.join(i+'\n');
+    }
+
+
+      $('#issue_custom_field_values_<%= commune_field_id %>').autocomplete({
+        minLength: 2,
+        source: function (request, response) {
+          $.getJSON("/communes?term=" + request.term, function (data) {
+            response($.map(data, function (value) {
+              return {
+                label: value.name,
+                value: value.name,
+                department: value.department
+              };
+            }));
+          });
+        },
+        select: function (event, ui) {
+          $('#issue_custom_field_values_<%= department_field_id %>').val(ui.item.department);
+        }
+      });
+    <% end %>
+
+    /* Départements */
+    <% if department_field_id.present? %>
+      $('#issue_custom_field_values_<%= department_field_id %>').autocomplete({
+        minLength: 2,
+        source: "/communes/departments"
+      });
     <% end %>
 
     $(document).on('change', '#content', function(){

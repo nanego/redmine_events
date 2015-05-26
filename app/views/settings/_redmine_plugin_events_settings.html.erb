@@ -34,6 +34,12 @@
     </td>
   </tr>
   <tr>
+    <th style="text-align: right;"><%= l("setting_autocompte_department_field") %> :</th>
+    <td>
+      <%= select_tag "settings[autocompte_department_field]", options_for_select(options, Setting['plugin_redmine_events']['autocompte_department_field']) %>
+    </td>
+  </tr>
+  <tr>
     <th style="text-align: right;"><%= l("setting_summary_field") %> :</th>
     <td>
       <%= select_tag "settings[summary_field]", options_for_select(options, Setting['plugin_redmine_events']['summary_field']) %>
