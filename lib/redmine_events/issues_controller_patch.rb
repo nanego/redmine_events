@@ -9,8 +9,12 @@ class IssuesController
 
   def description
     respond_to do |format|
-      format.html { render :html => "flash", :layout => 'pdf.html' }
-      format.pdf { render :pdf => "flash", :layout => 'pdf.html' }
+      format.html { render :html => "flash",
+                           :layout => 'pdf.html' }
+      format.pdf { render :pdf => "flash",
+                          :layout => 'pdf.html',
+                          :show_as_html => params[:debug].present?
+      }
     end
   end
 
@@ -278,7 +282,7 @@ DESCRIPTION
 
   def update_issue_description
     @issue.description.gsub! 'src="/system/rich/', "src=\"#{request.base_url}/system/rich/"
-    # @issue.description.gsub! 'https', 'http'
+    @issue.description.gsub! 'https', 'http'
   end
 
   def send_flash
