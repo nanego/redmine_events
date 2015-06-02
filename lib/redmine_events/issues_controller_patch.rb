@@ -281,8 +281,8 @@ DESCRIPTION
 
 
   def update_issue_description
-    @issue.description.gsub! 'src="/system/rich/', "src=\"#{request.base_url}/system/rich/"
-    @issue.description.gsub! 'https', 'http'
+    @issue.description.gsub! /src="http.*system\//, "src=\"file:///#{WickedPdfHelper.root_path.join('public', 'system')}"
+    # @issue.description.gsub! 'https', 'http'
   end
 
   def send_flash
