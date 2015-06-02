@@ -281,8 +281,11 @@ DESCRIPTION
 
 
   def update_issue_description
-    @issue.description.gsub! /src="http.*system\//, "src=\"file:///#{WickedPdfHelper.root_path.join('public', 'system')}"
+    @issue.description.gsub! /src=\"\/system.rich/, "src=\"#{WickedPdfHelper.root_path.join('public', 'system', 'rich')}"
+    @issue.description.gsub! /http.*cmvoa.*system.rich/, "#{WickedPdfHelper.root_path.join('public', 'system', 'rich')}"
     # @issue.description.gsub! 'https', 'http'
+    @issue.description.gsub! /http.*cmvoa.*images/, "#{WickedPdfHelper.root_path.join('public', 'plugin_assets', 'redmine_events', 'images')}"
+    @issue.description.gsub! /src='.plugin_assets.*images/, "src='#{WickedPdfHelper.root_path.join('public', 'plugin_assets', 'redmine_events', 'images')}"
   end
 
   def send_flash

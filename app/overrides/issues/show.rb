@@ -99,7 +99,7 @@ Deface::Override.new :virtual_path  => "issues/show",
                      :replace       => 'erb[loud]:contains("f.link_to \'PDF\'")',
                      :text          => <<EOS
 <% if @issue.tracker.name =~ /flash/i %>
-  <%= link_to 'PDF', description_issue_path(@issue, format: :html) %>
+  <%= link_to 'PDF', description_issue_path(@issue, format: :pdf), target: "_blank" %>
 <% else %>
   <%= f.link_to 'PDF' %>
 <% end %>

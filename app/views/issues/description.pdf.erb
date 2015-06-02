@@ -1,7 +1,35 @@
+
+<!-- wicked_pdf_image_tag('locked.png') %>
+<!-- image_tag Rails.root.join('public','images','locked.png').to_s %>
+
+<!-- >tests in textilizable </h1>
+
+<!-- textilizable '<a href="http://www.google.com">lien</a>' %><br>
+<!-- textilizable "#{image_tag 'https://www.google.fr/images/hpp/logo-myaccount-hpp-48px.png'} " %><br>
+<!-- textilizable "#{Rails.root.join('public','images','locked.png').to_s}" %><br>
+<!-- textilizable "#{image_tag Rails.root.join('public','images','locked.png').to_s}" %><br>
+<!-- textilizable "3: #{image_tag Rails.root.join('public','system','rich/rich_files/rich_files/000/000/009/original/logo.png').to_s, width: '200', height: '100'}" %><br>
+<!-- textilizable "3: #{image_tag Rails.root.join('public','system','rich', 'rich_files', 'rich_files', '000', '000', '009', 'original', 'logo.png').to_s, width: '200', height: '100'}" %><br>
+<!-- textilizable "4: #{Rails.root.join('public','images','Logo-République-Française.png').to_s}" %><br>
+<!-- textilizable "4: #{image_tag Rails.root.join('public','images','Logo-République-Française.png').to_s}" %><br>
+<!-- textilizable "5: #{Rails.root.join('public','images','logo.png').to_s}" %><br>
+<!-- textilizable "5: #{image_tag Rails.root.join('public','images','logo.png').to_s, width: '200', height: '100'  }" %><br>
+<!-- textilizable "6: #{Rails.root.join('public','images','Logo-Re%CC%81publiqueFranc%CC%A7aise.png').to_s}" %><br>
+<!-- textilizable "6: #{image_tag Rails.root.join('public','images','Logo-Re%CC%81publiqueFranc%CC%A7aise.png').to_s, width: '200', height: '100'  }" %><br>
+<!-- textilizable "7: #{Rails.root.join('public','images','logoé.png').to_s}" %><br>
+<!-- textilizable "7: #{image_tag Rails.root.join('public','images','logoé.png').to_s, width: '200', height: '100'  }" %><br>
+<!-- textilizable "8: #{Rails.root.join('public','images','Logoé-.png').to_s}" %><br>
+<!-- textilizable "8: #{image_tag Rails.root.join('public','images','Logoé-.png').to_s, width: '200', height: '100'  }" %><br>
+<!-- textilizable "9: #{Rails.root.join('public','images','Logo-République-Française2.png').to_s}" %><br>
+<!-- textilizable "9: #{image_tag Rails.root.join('public','images','Logo-République-Française2.png').to_s, width: '200', height: '100'  }" %><br>
+
+<!-- FLash :</h1>
+-->
+
 <% if @issue.description? %>
   <div class="description">
     <div class="wiki">
-      <%= textilizable @issue, :description, :attachments => @issue.attachments %>
+      <%= textilizable @issue.description %>
     </div>
   </div>
 <% end %>
