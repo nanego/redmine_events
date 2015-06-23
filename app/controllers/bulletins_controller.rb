@@ -215,20 +215,19 @@ HEADER
       </table>
 FAITS_MARQUANTS
 
-
-
-
-
+=begin
+    <strong>Météorologie et crues</strong><br />
+                            <div style="text-align: center;"><img src="http://www.meteofrance.com/integration/sim-portail/generated/integration/img/vigilance/mn.gif" alt="carte vigilance meteo"/><br />
+        <a href="http://france.meteofrance.com/vigilance/Accueil">http://france.meteofrance.com/vigilance/Accueil</a></div>
+        <br />
+=end
 
     @issue.description << <<FAITS_MARQUANTS_RESUMES_BEGIN
     <div style="text-align: left;"> 
     <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
     <tbody>
     <tr>
-    <td><strong>Météorologie et crues</strong><br />
-      <div style="text-align: center;"><img src="http://www.meteofrance.com/integration/sim-portail/generated/integration/img/vigilance/mn.gif" alt="carte vigilance meteo"/><br />
-			<a href="http://france.meteofrance.com/vigilance/Accueil">http://france.meteofrance.com/vigilance/Accueil</a></div>
-			<br />
+    <td>
       <strong>Faits marquants</strong>
 FAITS_MARQUANTS_RESUMES_BEGIN
 

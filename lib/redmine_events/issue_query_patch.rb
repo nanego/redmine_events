@@ -10,7 +10,7 @@ class IssueQuery < Query
   end
 
   def default_bulletins_columns_names
-    @default_columns_names ||=  [:id, :status, :subject, :updated_on]
+    @default_columns_names ||=  [:id, :status, :subject, :created_on, :updated_on]
   end
 
   def columns

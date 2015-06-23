@@ -91,7 +91,7 @@ class PointsController < ApplicationController
 
     major_events = {}
     related_evts.each do |evt|
-      domaine=evt.custom_field_value(CustomField.find_by_name('Domaines')).first
+      domaine=evt.custom_field_value(CustomField.find_by_name('Domaines')).try(:first)
       major_events[domaine] ||= {}
       commune = evt.custom_field_value(CustomField.find_by_name('Commune'))
       major_events[domaine][commune] ||= []
