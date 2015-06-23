@@ -21,7 +21,7 @@ class Mailer
 
   # Notifies users about a new issue
   def self.deliver_flash(issue)
-    to = issue.notified_users
+    to = issue.notified_users | issue.project.members.map(&:user)  # Ajout de tous les membres du projet, quelque soit leur config
     cc = issue.notified_watchers - to
     issue.each_notification(to + cc) do |users|
       Mailer.flash(issue, to & users, cc & users).deliver
