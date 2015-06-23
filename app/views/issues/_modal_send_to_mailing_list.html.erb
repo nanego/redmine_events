@@ -3,15 +3,20 @@
 <div class="actions_links">
   <div>
     <p>
-      Le <%= @issue.tracker.name.downcase %> sera envoyé par email à tous les utilisateurs. Par la suite, il serait possible de définir des listes de diffusion afin de sélectionner les destinataires.
+      Le <%= @issue.tracker.name.downcase %> sera envoyé par email à tous les membres du projet.
     </p>
-    <%= link_to "Envoyer le #{@issue.tracker.name.downcase}", issue_send_flash_path(@issue),
-                :class => 'icon icon-report',
-                :method => 'post',
-                :remote => true %>
+    <p>
+      <i> Par la suite, il serait possible de définir des listes de diffusion afin de sélectionner les destinataires.</i>
+    </p>
   </div>
 </div>
 
 <p class="buttons">
-  <%= submit_tag 'Annuler', :name => nil, :onclick => "hideModal(this);", :type => 'button', :id=> 'button_apply_projects' %>
+  <%= link_to "Envoyer le #{@issue.tracker.name.downcase}", issue_send_flash_path(@issue),
+              :class => 'icon icon-report link-btn',
+              :style => 'padding-left: 20px;',
+              :method => 'post',
+              :remote => true %>
+  <%= link_to 'Annuler', '#', :onclick => "hideModal(this);", :class => 'link-btn' %>
 </p>
+<br>

@@ -22,3 +22,15 @@ table.list td, table.list th {
 .cke_editable{
     min-width: 0px;
 }
+
+.link-btn {
+    -webkit-border-radius: 5;
+    -moz-border-radius: 5;
+    border-radius: 5px;
+    border: solid #c0c0c0 1px;
+    text-decoration: none;
+    padding: 2px 3px 3px 3px;
+}
+.link-btn:hover {
+    text-decoration: none;
+}
