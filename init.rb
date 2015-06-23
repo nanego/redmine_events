@@ -36,7 +36,7 @@ Redmine::Plugin.register :redmine_events do
       menu.delete :help
       menu.delete :administration
       menu.delete :projects
-      # menu.delete :my_page
+      menu.delete :my_page
       menu.push :issues, { :controller => 'issues', :project_id => 'cmvoa' }, :caption => :label_issue_plural,
                 :if => Proc.new{ User.current.logged? && User.current.allowed_to?(:view_issues, nil, :global => true) }
       menu.push :administration, { :controller => 'settings' },
