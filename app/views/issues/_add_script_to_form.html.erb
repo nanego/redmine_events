@@ -58,13 +58,14 @@
               return {
                 label: value.name,
                 value: value.name,
-                department: value.department
+                department: value.department,
+                department_name: value.department_name
               };
             }));
           });
         },
         select: function (event, ui) {
-          $('#issue_custom_field_values_<%= department_field_id %>').val(ui.item.department);
+          $('#issue_custom_field_values_<%= department_field_id %>').val(ui.item.department + ' ' + ui.item.department_name);
         }
       });
     <% end %>
