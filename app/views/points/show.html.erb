@@ -147,7 +147,7 @@ end %>
 <% end %>
 
 <% other_formats_links do |f| %>
-  <%= f.link_to 'PDF', description_issue_path(@issue, format: :pdf), target: "_blank" %>
+  <%= link_to 'PDF', description_issue_path(@issue, format: :pdf), target: "_blank" %>
 <% end %>
 
 <% html_title "#{@issue.tracker.name} ##{@issue.id}: #{@issue.subject}" %>

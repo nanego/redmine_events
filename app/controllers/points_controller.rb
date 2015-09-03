@@ -20,6 +20,7 @@ class PointsController < ApplicationController
   helper :sort
   include SortHelper
   include IssuesHelper
+  include EventsHelper
   helper :timelog
   include Redmine::Export::PDF
 
@@ -47,18 +48,17 @@ class PointsController < ApplicationController
 
     @issue.subject = "POINT DE SITUATION"
 
-    related_evts = Issue.where("id IN (?)", params[:ids])
-
-    @issue.start_date = DateTime.parse(@issue.start_date.to_s)
-    @issue.due_date = DateTime.parse(@issue.start_date.to_s)
-
-    generate_point_description(related_evts)
-
-    @issue.subject = "Point de situation N°#{@issue.id}"
-
     if @issue.save
 
+      related_evts = Issue.where("id IN (?)", params[:ids])
+
+      @issue.start_date = DateTime.parse(@issue.start_date.to_s)
+      @issue.due_date = DateTime.parse(@issue.start_date.to_s)
+
+      generate_point_description(related_evts)
+
       @issue.subject = "Point de situation N°#{@issue.id}"
+
       @issue.save
 
       related_evts.each do |evt|
@@ -86,182 +86,11 @@ class PointsController < ApplicationController
   end
 
   def generate_point_description(related_evts)
-
     @issue.description ||= ""
-
-    major_events = {}
-    related_evts.each do |evt|
-      domaine=evt.custom_field_value(CustomField.find_by_name('Domaines')).try(:first)
-      major_events[domaine] ||= {}
-      commune = evt.custom_field_value(CustomField.find_by_name('Commune'))
-      major_events[domaine][commune] ||= []
-      major_events[domaine][commune] << evt
-    end
-
-    @issue.description << <<HEADER
-      <br />
-      <div style="text-align: center;margin-top:10px;">
-        <table border="1" cellpadding="0" cellspacing="0" id="flash_header" style="border: 2px solid rgb(0, 0, 0); box-shadow: rgb(101, 101, 101) 1px 1px 1px 0px; height: 200px; margin: 10px auto auto; text-align: center; width: 98%;">
-          <tbody>
-            <tr>
-              <td>#{Setting['plugin_redmine_events']['logo_ministere']}<br/>
-              <span style="text-align: center; font-family: arial, helvetica, sans-serif;"><strong>Ministère de l'Écologie, du Développement durable et de l'Énergie<br />
-              Ministère du Logement, de l'Égalité des territoires et de la Ruralité<br />
-              Service de Défense, de Sécurité et d'Intelligence Économique<br />
-              <br />
-              <span style="font-size: 18px;">POINT DE SITUATION N° #{@issue.id}</span></strong><br />
-              du #{ I18n.l @issue.start_date, format: :complete } au #{ I18n.l @issue.due_date, format: :complete }</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <br />
-HEADER
-
-    @issue.description << <<FAITS_MARQUANTS
-      <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(220, 220, 220);">
-        <tbody>
-          <tr>
-            <td><strong><em><span style="font-size:18px;"> SITUATION GENERALE - PREVISIONS</span></em></strong></td>
-          </tr>
-        </tbody>
-      </table>
-FAITS_MARQUANTS
-
-
-    @issue.description << <<FAITS_MARQUANTS_RESUMES_BEGIN
-    <div style="text-align: left;"> 
-    <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
-    <tbody>
-    <tr>
-    <td>
-      <strong>Faits marquants</strong>
-FAITS_MARQUANTS_RESUMES_BEGIN
-
-    major_events.each do |domaine, communes|
-      # @issue.description << "\n## #{domaine}"
-      communes.each do |commune, events|
-        events.each do |event|
-          resume = event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))
-          if resume.present? && event.priority_id >= 3
-            @issue.description << <<LIST_FAITS_MARQUANTS
-  <ul>
-	  <li>#{event.custom_field_value(CustomField.find(11)).present? ? (event.custom_field_value(CustomField.find(11)) + ( Commune.find_by_name(event.custom_field_value(CustomField.find(11))).present? ? ' (' + Commune.find_by_name(event.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' : '') )  : event.custom_field_value(CustomField.find(9))} : #{resume}</li>
-    </ul>
-LIST_FAITS_MARQUANTS
-          end
-        end
-      end
-    end
-
-    @issue.description << <<FAITS_MARQUANTS_RESUMES_END
-			</td>
-    </tr>
-	</tbody>
-    </table>
-</div>
-FAITS_MARQUANTS_RESUMES_END
-
-
-    @issue.description << <<INCIDENTS
-<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(220, 220, 220);">
-	<tbody>
-		<tr>
-			<td><strong><em><span style="font-size: 18px;"> PERTURBATIONS, INCIDENTS, ACCIDENTS </span></em></strong></td>
-		</tr>
-	</tbody>
-</table>
-<br/>
-INCIDENTS
-
-    events = {}
-    related_evts.each do |evt|
-      evt.custom_field_value(CustomField.find_by_name('Domaines')).each do |domaine|
-        events[domaine] ||= {}
-        commune = evt.custom_field_value(CustomField.find_by_name('Commune'))
-        events[domaine][commune] ||= []
-        events[domaine][commune] << evt
-      end
-    end
-
-    events.each do |domaine, communes|
-      @issue.description << <<DOMAINES
-<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(240, 240, 240);">
-	<tbody>
-		<tr>
-			<td><strong><span style="font-size:16px;"> #{domaine}</span></strong></td>
-		</tr>
-	</tbody>
-</table>
-<BR/>
-DOMAINES
-
-      @issue.description << <<TYPES_START
-<table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
-	<tbody>
-		<tr>
-			<td>
-TYPES_START
-
-      communes.each do |commune, events|
-        @issue.description << "<strong>#{commune} #{  Commune.find_by_name(commune).present? ? ' (' + Commune.find_by_name(commune).department.to_s.rjust(2, '0') + ')' : ''} :</strong>" if commune.present?
-        @issue.description << "<ul>"
-        events.each do |event|
-          resume = event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))
-
-          if (event.custom_field_value(CustomField.find(16)).present? || event.custom_field_value(CustomField.find(4)).present?)
-
-            @issue.description << <<TYPES_CONTENT
-
-            <strong><span style="background-color:#FFD700;">Incident #{event.custom_field_value(CustomField.find(2))}</span><br /></strong>
-
-            #{event.custom_field_value(CustomField.find(16)).present? ? event.custom_field_value(CustomField.find(16)) : event.custom_field_value(CustomField.find(4))}<br/>
-            #{event.custom_field_value(CustomField.find(7)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+event.custom_field_value(CustomField.find(7)).to_s+' morts.</span><br/>').html_safe : ''}
-            #{event.custom_field_value(CustomField.find(6)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+event.custom_field_value(CustomField.find(6)).to_s+' blessés.</span><br/>').html_safe : ''}
-            #{event.custom_field_value(CustomField.find(17))}
-
-TYPES_CONTENT
-
-            # #{event.custom_field_value(CustomField.find(17))}
-
-          end
-
-        end
-        @issue.description << "</ul>"
-      end
-
-      @issue.description << <<TYPES_STOP
-			</td>
-		</tr>
-	</tbody>
-</table>
-TYPES_STOP
-
-    end
-
-    @issue.description << <<EXERCICES
-<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(220, 220, 220);">
-	<tbody>
-		<tr>
-			<td><strong><em><span style="font-size: 18px;"> EXERCICES (tous domaines) </span></em></strong></td>
-		</tr>
-	</tbody>
-</table>
-<br/>
-EXERCICES
-
-    @issue.description << <<EXERCICES_CONTENT
-<table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
-	<tbody>
-		<tr>
-			<td>
-        <img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_grey.png\'/> RAS<span style="padding-left: 1.0em;"></span><br/><br/>
-			</td>
-		</tr>
-	</tbody>
-</table>
-EXERCICES_CONTENT
-
+    @issue.description << point_header(@issue)
+    @issue.description << bulletin_main_facts(@issue, related_evts)
+    @issue.description << bulletin_incidents(@issue, related_evts)
+    @issue.description << bulletin_exercices
   end
 
   def show
