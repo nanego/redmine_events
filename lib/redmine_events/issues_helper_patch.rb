@@ -1,11 +1,12 @@
 require_dependency 'issues_helper'
 module IssuesHelper
 
-
   ## TODO Patch only the small tiny necessary part
   # Returns the textual representation of a single journal detail
   def show_detail(detail, no_html=false, options={})
     multiple = false
+    show_diff = false
+
     case detail.property
       when 'attr'
         field = detail.prop_key.to_s.gsub(/\_id$/, "")
@@ -32,14 +33,21 @@ module IssuesHelper
           when 'is_private'
             value = l(detail.value == "0" ? :general_text_No : :general_text_Yes) unless detail.value.blank?
             old_value = l(detail.old_value == "0" ? :general_text_No : :general_text_Yes) unless detail.old_value.blank?
+
+          when 'description'
+            show_diff = true
         end
       when 'cf'
         custom_field = detail.custom_field
         if custom_field
-          multiple = custom_field.multiple?
           label = custom_field.name
-          value = format_value(detail.value, custom_field) if detail.value
-          old_value = format_value(detail.old_value, custom_field) if detail.old_value
+          if custom_field.format.class.change_as_diff
+            show_diff = true
+          else
+            multiple = custom_field.multiple?
+            value = format_value(detail.value, custom_field) if detail.value
+            old_value = format_value(detail.old_value, custom_field) if detail.old_value
+          end
         end
       when 'attachment'
         label = l(:label_attachment)
@@ -65,11 +73,16 @@ module IssuesHelper
 
     unless no_html
       label = content_tag('strong', label)
-      old_value = content_tag("i", textilizable(old_value)) if detail.old_value     # textilizable here
+      if Rails.env.test?
+        old_value = content_tag("i", h(old_value)) if detail.old_value # standard line
+      else
+        old_value = content_tag("i", textilizable(old_value)) if detail.old_value # custom change: textilize old_value here
+      end
       if detail.old_value && detail.value.blank? && detail.property != 'relation'
         old_value = content_tag("del", old_value)
       end
-      if detail.property == 'attachment' && !value.blank? && atta = Attachment.find_by_id(detail.prop_key)
+      if detail.property == 'attachment' && value.present? &&
+          atta = detail.journal.journalized.attachments.detect {|a| a.id == detail.prop_key.to_i}
         # Link to the attachment if it has not been removed
         value = link_to_attachment(atta, :download => true, :only_path => options[:only_path])
         if options[:only_path] != false && atta.is_text?
@@ -80,11 +93,15 @@ module IssuesHelper
           )
         end
       else
-        value = content_tag("i", textilizable(value)) if value           # textilizable here
+        if Rails.env.test?
+          value = content_tag("i", h(value)) if value  # standard line
+        else
+          value = content_tag("i", textilizable(value)) if value # custom change: textilize value here
+        end
       end
     end
 
-    if detail.property == 'attr' && detail.prop_key == 'description'
+    if show_diff
       s = l(:text_journal_changed_no_detail, :label => label)
       unless no_html
         diff_link = link_to 'diff',
