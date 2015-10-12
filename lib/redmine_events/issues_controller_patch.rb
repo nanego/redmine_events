@@ -4,7 +4,7 @@ require_dependency 'issues_controller'
 
 class IssuesController
 
-  before_filter :find_optional_project, :only => [:index, :flashs]
+  before_filter :find_optional_project_for_flashs, :only => [:flashs]
   before_filter :find_issue, :only => [:show, :edit, :update, :description, :show_flash, :show_point, :show_bulletin]
   before_filter :authorize, :except => [:index, :flashs, :show_flash, :show_point, :show_bulletin, :create_flash, :description, :show, :send_flash]
   append_before_filter :update_issue_description, :only => [:description]
@@ -235,6 +235,12 @@ DESCRIPTION
     @original_issue = Issue.find(params[:issue_id])
     Mailer.deliver_flash(@original_issue)
   end
+
+  private
+
+    def find_optional_project_for_flashs
+      find_optional_project
+    end
 
 end
 
