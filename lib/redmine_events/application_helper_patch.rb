@@ -9,9 +9,9 @@ module ApplicationHelper
 
   unless instance_methods.include?(:format_object_with_event)
     def format_object_with_event(object, html=true, &block)
-      if (object.class.name == 'CustomValue' || object.class.name == 'CustomFieldValue') && object.custom_field
+      if (object.class.name == 'CustomValue' || object.class.name == 'CustomFieldValue') && object.custom_field && !block_given?
         f = object.custom_field.format.formatted_custom_value(self, object, html)
-        if f.nil? || f.is_a?(String)
+        if (f.nil? || f.is_a?(String)) && html
           textilizable(object.value)
         else
           format_object_without_event(object, html, &block)
