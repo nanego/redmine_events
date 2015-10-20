@@ -1,0 +1,43 @@
+---
+trackers_001:
+  name: Bug
+  id: 1
+  is_in_chlog: true
+  default_status_id: 1
+  position: 1
+trackers_002:
+  name: Feature request
+  id: 2
+  is_in_chlog: true
+  default_status_id: 1
+  position: 2
+trackers_003:
+  name: Support request
+  id: 3
+  is_in_chlog: false
+  default_status_id: 1
+  position: 3
+trackers_011:
+  name: Fiche événement
+  id: 11
+  is_in_chlog: true
+  default_status_id: 1
+  position: 11
+trackers_012:
+  name: Flash
+  id: 12
+  is_in_chlog: true
+  default_status_id: 1
+  position: 12
+trackers_013:
+  name: Bulletin de synthèse
+  id: 13
+  is_in_chlog: false
+  default_status_id: 1
+  position: 13
+trackers_014:
+  name: Point de situation
+  id: 14
+  is_in_chlog: false
+  default_status_id: 1
+  position: 14
