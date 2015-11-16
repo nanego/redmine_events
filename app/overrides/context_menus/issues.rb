@@ -14,3 +14,7 @@ Deface::Override.new :virtual_path  => 'context_menus/issues',
                      :name          => 'add-id-to-context-menu',
                      :surround      => 'ul',
                      :text          => '<div id="larger-context-menu"><%= render_original %></div>'
+
+Deface::Override.new :virtual_path  => 'context_menus/issues',
+                     :name          => 'remove-trackers-from-context-menu',
+                     :remove        => 'li:contains("l(:field_tracker)")'
