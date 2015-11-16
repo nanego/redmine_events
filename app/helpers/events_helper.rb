@@ -77,7 +77,7 @@ FAITS_MARQUANTS_RESUMES_BEGIN
           if resume.present? && event.priority_id >= 3
             main_facts << <<LIST_FAITS_MARQUANTS
   <ul>
-	  <li>#{event.custom_field_value(CustomField.find(11)).present? ? (event.custom_field_value(CustomField.find(11)) + ( Commune.find_by_name(event.custom_field_value(CustomField.find(11))).present? ? ' (' + Commune.find_by_name(event.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' : '') )  : event.custom_field_value(CustomField.find(9))} : #{resume}</li>
+	  <li>#{event.custom_field_value(CustomField.find(11)).present? ? (event.custom_field_value(CustomField.find(11)) + ( Commune.find_by_name(event.custom_field_value(CustomField.find(11))).present? ? ' (' + Commune.find_by_name(event.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' : '') )  : event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))} : #{resume}</li>
     </ul>
 LIST_FAITS_MARQUANTS
           end

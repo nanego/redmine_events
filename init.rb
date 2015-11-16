@@ -27,7 +27,7 @@ Redmine::Plugin.register :redmine_events do
   menu :project_menu, :bulletins, {controller: 'bulletins', action: 'index'}, :caption => :label_bulletins, :param => :project_id
   menu :project_menu, :points, {controller: 'points', action: 'index'}, :caption => :label_points, :param => :project_id
 
-  settings :default => { 'select2_fields' => [], 'autocompte_communes_field' => nil},
+  settings :default => { 'select2_fields' => [], 'commune_field' => nil},
            :partial => 'settings/redmine_plugin_events_settings'
 
   unless Rails.env.test?

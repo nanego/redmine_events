@@ -28,15 +28,15 @@
     </td>
   </tr>
   <tr>
-    <th style="text-align: right;"><%= l("setting_autocompte_communes_field") %> :</th>
+    <th style="text-align: right;"><%= l("setting_commune_field") %> :</th>
     <td>
-      <%= select_tag "settings[autocompte_communes_field]", options_for_select(options, Setting['plugin_redmine_events']['autocompte_communes_field']) %>
+      <%= select_tag "settings[commune_field]", options_for_select(options, Setting['plugin_redmine_events']['commune_field']) %>
     </td>
   </tr>
   <tr>
-    <th style="text-align: right;"><%= l("setting_autocompte_department_field") %> :</th>
+    <th style="text-align: right;"><%= l("setting_department_field") %> :</th>
     <td>
-      <%= select_tag "settings[autocompte_department_field]", options_for_select(options, Setting['plugin_redmine_events']['autocompte_department_field']) %>
+      <%= select_tag "settings[department_field]", options_for_select(options, Setting['plugin_redmine_events']['department_field']) %>
     </td>
   </tr>
   <tr>

@@ -93,9 +93,9 @@ class IssuesController
     @flash.tracker = Tracker.find_by_name('Flash')
     commune = Commune.find_by_name(@original_issue.custom_field_value(CustomField.find(11)))
     if commune.present?
-      @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? "#{commune.name} ( #{commune.department.to_s.rjust(2, '0')} )" : @original_issue.custom_field_value(CustomField.find(9))}"
+      @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? "#{commune.name} ( #{commune.department.to_s.rjust(2, '0')} )" : @original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))}"
     else
-      @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? (@original_issue.custom_field_value(CustomField.find(11)) )  : @original_issue.custom_field_value(CustomField.find(9))}"
+      @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? (@original_issue.custom_field_value(CustomField.find(11)) )  : @original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))}"
     end
 
     generate_flash_description(@original_issue)
@@ -202,7 +202,7 @@ DOMAINES
             <tr>
               <td>
                 <b>
-                  #{commune.present? ? (commune.department_name.to_s + ' (' + commune.department.to_s.rjust(2, '0') + ')' )  : original_issue.custom_field_value(CustomField.find(9))} :
+                  #{commune.present? ? (commune.department_name.to_s + ' (' + commune.department.to_s.rjust(2, '0') + ')' )  : original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))} :
                 </b>
               </td>
             </tr>
