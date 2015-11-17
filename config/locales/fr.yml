@@ -43,3 +43,5 @@ fr:
   setting_summary_field: Champ Résumé
   setting_domain_field: Champ Domaine
   setting_source_field: Champ multivalué Sources
+  setting_consequence_field: Champ Conséquences
+  wiki_toolbar_custom_fields: Champs utilisant CKEditor
