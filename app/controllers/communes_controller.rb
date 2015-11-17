@@ -4,7 +4,7 @@ class CommunesController < ApplicationController
     @communes = Commune.order(:name)
                     .where("lower(name) like lower(?) OR lower(postal_code) like lower(?)", "%#{params[:term]}%", "%#{params[:term]}%")
 
-    result = @communes.map { |c| {id: c.id, name: c.name, department_name: c.department_name, department: c.department} }
+    result = @communes.map { |c| {id: c.id, name: c.name, department_name: c.department_name, department: c.department, postal_code: c.postal_code.rjust(5, '0')} }
 
     render json: result
   end

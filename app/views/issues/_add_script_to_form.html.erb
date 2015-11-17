@@ -57,7 +57,7 @@
           $.getJSON("/communes?term=" + request.term, function (data) {
             response($.map(data, function (value) {
               return {
-                label: value.name,
+                label: (value.name + ' - ' + value.postal_code),
                 value: value.name,
                 department: value.department,
                 department_name: value.department_name
