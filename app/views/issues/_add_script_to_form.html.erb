@@ -28,7 +28,8 @@
 
     <% Setting['plugin_redmine_events']['select2_fields'].each do |custom_field_id| %>
     $('#issue_custom_field_values_<%= custom_field_id %>').select2({
-      containerCss: {minWidth: '95%'}
+      containerCss: {width: '300px', minwidth: '300px'},
+      width: 'style'
     });
     <% end %>
 
