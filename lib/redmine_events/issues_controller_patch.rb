@@ -91,12 +91,6 @@ class IssuesController
     @flash = Issue.new
     @flash.copy_from(@original_issue, :attachments => nil, :subtasks => nil)
     @flash.tracker = Tracker.find_by_name('Flash')
-    commune = Commune.find_by_name(@original_issue.custom_field_value(CustomField.find(11)))
-    if commune.present?
-      @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? "#{commune.name} ( #{commune.department.to_s.rjust(2, '0')} )" : @original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))}"
-    else
-      @flash.subject = "#{@original_issue.subject}, #{@original_issue.custom_field_value(CustomField.find(11)).present? ? (@original_issue.custom_field_value(CustomField.find(11)) )  : @original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))}"
-    end
 
     generate_flash_description(@original_issue)
 
@@ -118,6 +112,7 @@ class IssuesController
 
       redirect_to show_flash_path(@flash)
     else
+      flash[:error] = "Erreur lors de la création du flash. Veuillez signaler ce bug en précisant l'évènement concerné. Merci."
       redirect_to issue_path(@original_issue)
     end
 
