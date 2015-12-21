@@ -6,3 +6,7 @@ unless Rails.env.test?
       :name          => "hide-attachments-field",
       :remove       => 'fieldset:contains("l(:label_attachment_plural)")'
 end
+
+Deface::Override.new :virtual_path  => "issues/_edit",
+                     :name          => "remove_preview_link_from_issue_edit_form",
+                     :remove       => 'erb[loud]:contains("preview_link")'
