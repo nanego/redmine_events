@@ -15,8 +15,9 @@
   <%= yield :header_tags -%>
 </head>
 <body class="<%=h body_css_classes %>">
-<div>
-  <%= yield %>
-</div>
+      <!-- style="background: url('file://< "#{WickedPdfHelper.root_path.join('public', 'plugin_assets', 'redmine_events', 'images')}/cmvoa_footer.jpg" %>') bottom left no-repeat fixed;" -->
+  <div>
+    <%= yield %>
+  </div>
 </body>
 </html>

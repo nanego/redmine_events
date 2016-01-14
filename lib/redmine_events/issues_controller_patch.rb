@@ -11,12 +11,19 @@ class IssuesController
 
   def description
     respond_to do |format|
-      format.html { render :html => "flash",
-                           :layout => 'pdf.html' }
+      format.html { render :pdf => "flash",
+                           :layout => 'pdf.html',
+                           :background => true,
+                           :no_background => false,
+                           :show_as_html => true }
       format.pdf { render :pdf => "flash",
                           :layout => 'pdf.html',
-                          :show_as_html => params[:debug].present?
-      }
+                          :show_as_html => params[:debug].present?,
+                          :margin => {:bottom => 40},
+                          :background => true,
+                          :no_background => false,
+                          :footer => {:html => {:template => 'layouts/pdf_footer.html.erb'} ,
+                                      :margin => {:left => 0, :right => 0, :bottom => 0} } }
     end
   end
 
