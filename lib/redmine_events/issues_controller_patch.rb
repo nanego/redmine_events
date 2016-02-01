@@ -119,7 +119,7 @@ class IssuesController
 
       redirect_to show_flash_path(@flash)
     else
-      flash[:error] = "Erreur lors de la création du flash. Veuillez signaler ce bug en précisant l'évènement concerné. Merci."
+      flash[:error] = "Erreur lors de la création du flash. Veuillez signaler ce bug en précisant l'événement concerné. Merci."
       redirect_to issue_path(@original_issue)
     end
 
@@ -163,7 +163,7 @@ HEADER
               #{original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))}
               <br />
               #{original_issue.custom_field_value(CustomField.find(5)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Cabinet informé.</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(CustomField.find(15)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evènement médiatisé.</em></span>".html_safe : ""}
+              #{original_issue.custom_field_value(CustomField.find(15)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
               #{original_issue.custom_field_value(CustomField.find(14)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
               </td>
             </tr>
