@@ -34,3 +34,7 @@ table.list td, table.list th {
 .link-btn:hover {
     text-decoration: none;
 }
+
+.issue_custom_field_comments {
+    margin-left: 10px;
+}
