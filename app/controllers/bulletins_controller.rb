@@ -34,10 +34,11 @@ class BulletinsController < ApplicationController
     @query.filters = {"tracker_id"=>{:operator=>"=", :values=>["#{Tracker.where("trackers.name like '%Bulletin%'").first.id}"]}}
 
     scope = @project ? @project.issues.visible : Issue.visible
+
     @bulletin = Issue.new # for adding bulletins inline
-    @bulletin.start_date = 1.day.ago.strftime("%Y-%m-%d 08:30")
-    @bulletin.due_date = Time.now.strftime("%Y-%m-%d 08:30")
-    # @bulletin.description = "Bulletin quotidien"
+    @bulletin.start_date = 1.day.ago.change({ hour: 8, min: 30 }).strftime('%d/%m/%Y %H:%M')
+    @bulletin.due_date = DateTime.now.change({ hour: 8, min: 30 }).strftime('%d/%m/%Y %H:%M')
+
     @bulletins = scope.includes([:author, :project]).
         joins(:tracker).
         where("trackers.name like '%Bulletin%'").
