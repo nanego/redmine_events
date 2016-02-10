@@ -112,6 +112,15 @@ class IssuesController
       @flash.description.gsub! 'FLASH CMVOA N°025', "FLASH CMVOA N°#{@flash.id}"
       @flash.save
 
+      # Archive old flashes
+      @original_issue.relations.each do |relation|
+        flash = Issue.find(relation.issue_to_id)
+        if flash.id!=@flash.id && flash.tracker==Tracker.find_by_name('Flash')
+          flash.status = IssueStatus.find_by_name('Archivé')
+          flash.save
+        end
+      end
+
       @flash.reload.relations.first.relation_type = 'relates'
       @flash.relations.first.save
 
@@ -197,6 +206,7 @@ TITRE
       <br />
 DOMAINES
 
+    departments = original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))
     @flash.description << <<DESCRIPTION
       <div style="text-align: left;">
         <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 92%;">
@@ -204,7 +214,7 @@ DOMAINES
             <tr>
               <td>
                 <b>
-                  #{commune.present? ? (commune.department_name.to_s + ' (' + commune.department.to_s.rjust(2, '0') + ')' )  : original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))} :
+                  #{commune.present? && departments.size < 2 ? (commune.department_name.to_s + ' (' + commune.department.to_s.rjust(2, '0') + ')' )  : departments.join(', ')} :
                 </b>
               </td>
             </tr>
