@@ -166,7 +166,7 @@ HEADER
             <tr>
               <td>
               <div style="text-align: center;">
-              <div style="text-align: left;"><em>Sources : #{original_issue.taggings.map{|source| "#{source.tag.name} (#{source.details})"}.join(', ')}</em></div>
+              <div style="text-align: left;"><em>Sources : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
               </div>
               <br />
               #{original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))}
