@@ -5,8 +5,8 @@ require_dependency 'issues_controller'
 class IssuesController
 
   before_filter :find_optional_project_for_events, :only => [:flashs]
-  before_filter :find_issue, :only => [:show, :edit, :update, :description, :show_flash, :show_point, :show_bulletin]
-  before_filter :authorize, :except => [:index, :new, :create, :flashs, :show_flash, :show_point, :show_bulletin, :create_flash, :description, :show, :send_flash]
+  before_filter :find_issue, :only => [:show, :edit, :update, :description, :show_flash]
+  before_filter :authorize, :except => [:index, :new, :create, :flashs, :show_flash, :create_flash, :description, :show, :send_flash]
   append_before_filter :update_issue_description, :only => [:description]
 
   def description
@@ -28,12 +28,6 @@ class IssuesController
   end
 
   def show_flash
-    show
-  end
-  def show_point
-    show
-  end
-  def show_bulletin
     show
   end
 

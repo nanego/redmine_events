@@ -11,9 +11,9 @@ module QueriesHelper
             when /flash/i
               link_to value, show_flash_path(issue.id)
             when /bulletin/i
-              link_to value, show_bulletin_path(issue.id)
+              link_to value, bulletin_path(issue.id)
             when /point/i
-              link_to value, show_point_path(issue.id)
+              link_to value, point_path(issue.id)
             else
               link_to value, issue_path(issue)
           end
@@ -22,9 +22,9 @@ module QueriesHelper
             when /flash/i
               link_to value, show_flash_path(issue.id)
             when /bulletin/i
-              link_to value, show_bulletin_path(issue.id)
+              link_to value, bulletin_path(issue.id)
             when /point/i
-              link_to value, show_point_path(issue.id)
+              link_to value, point_path(issue.id)
             else
               link_to value, issue_path(issue)
           end

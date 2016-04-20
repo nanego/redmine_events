@@ -26,15 +26,16 @@
 
   <%= avatar(@issue.author, :size => "50") %>
 
-<div class="subject">
-<%= render_issue_subject_with_tree(@issue) %>
-</div>
-        <p class="author">
-        <%= authoring @issue.created_on, @issue.author %>.
-        <% if @issue.created_on != @issue.updated_on %>
-        <%= l(:label_updated_time, time_tag(@issue.updated_on)).html_safe %>.
-        <% end %>
-        </p>
+  <div class="subject">
+  <%= render_issue_subject_with_tree(@issue) %>
+  </div>
+
+  <p class="author">
+  <%= authoring @issue.created_on, @issue.author %>.
+  <% if @issue.created_on != @issue.updated_on %>
+  <%= l(:label_updated_time, time_tag(@issue.updated_on)).html_safe %>.
+  <% end %>
+  </p>
 
   <% if @relations.present? || User.current.allowed_to?(:manage_issue_relations, @project) %>
     <hr />

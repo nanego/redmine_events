@@ -1,16 +1,6 @@
 <%= error_messages_for @point %>
 
 <div class="box tabular">
-  <p>
-    <%= f.text_field(:start_date, :size => 16, :disabled => false,
-                     :required => true) %>
-    <%= calendar_for('issue_start_date', true) %>
-  </p>
-  <p>
-    <%= f.text_field(:due_date, :size => 16, :disabled => false,
-                     :required => true) %>
-    <%= calendar_for('issue_due_date', true) %>
-  </p>
   <p><%= f.text_field :subject, :required => true, :size => 60 %></p>
   <!--
   <p>< f.text_area :description, :required => true, :cols => 60, :rows => 15, :class => 'wiki-edit' ></p>
