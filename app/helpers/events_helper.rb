@@ -34,6 +34,10 @@ HEADER
 
   def bulletin_main_facts(event, related_evts)
 
+    summary_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['summary_field'])
+    commune_custom_field = CustomField.find_by_id(11)
+    departements_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['department_field'])
+
     major_events = {}
     related_evts.each do |evt|
       domaine=evt.custom_field_value(CustomField.find_by_name('Domaines')).first
@@ -73,11 +77,11 @@ FAITS_MARQUANTS_RESUMES_BEGIN
       # main_facts << "\n## #{domaine}"
       communes.each do |commune, events|
         events.each do |event|
-          resume = event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))
+          resume = event.custom_field_value(summary_custom_field)
           if resume.present? && event.priority_id >= 3
             main_facts << <<LIST_FAITS_MARQUANTS
   <ul>
-	  <li>#{event.custom_field_value(CustomField.find(11)).present? ? (event.custom_field_value(CustomField.find(11)) + ( Commune.find_by_name(event.custom_field_value(CustomField.find(11))).present? ? ' (' + Commune.find_by_name(event.custom_field_value(CustomField.find(11))).department.to_s.rjust(2, '0') + ')' : '') )  : event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))} : #{resume}</li>
+	  <li>#{event.custom_field_value(commune_custom_field).present? ? (event.custom_field_value(commune_custom_field) + ( Commune.find_by_name(event.custom_field_value(commune_custom_field)).present? ? ' (' + Commune.find_by_name(event.custom_field_value(commune_custom_field)).department.to_s.rjust(2, '0') + ')' : '') )  : event.custom_field_value(departements_custom_field)} : #{resume}</li>
     </ul>
 LIST_FAITS_MARQUANTS
           end
@@ -98,6 +102,16 @@ FAITS_MARQUANTS_RESUMES_END
   end
 
   def bulletin_incidents(event, related_evts)
+
+    summary_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['summary_field'])
+    facts_custom_field = CustomField.find_by_id(16)
+    commune_custom_field = CustomField.find_by_id(11)
+    domaine_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['domain_field'])
+    category_custom_field = CustomField.find_by_id(2)
+    dead_number_custom_field = CustomField.find_by_id(7)
+    injured_number_custom_field = CustomField.find_by_id(6)
+    engaged_actions_custom_field = CustomField.find_by_id(17)
+
     incidents = <<INCIDENTS
 <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(220, 220, 220);">
 	<tbody>
@@ -111,9 +125,9 @@ INCIDENTS
 
     events = {}
     related_evts.each do |evt|
-      evt.custom_field_value(CustomField.find_by_name('Domaines')).each do |domaine|
+      evt.custom_field_value(domaine_custom_field).each do |domaine|
         events[domaine] ||= {}
-        commune = evt.custom_field_value(CustomField.find_by_name('Commune'))
+        commune = evt.custom_field_value(commune_custom_field)
         events[domaine][commune] ||= []
         events[domaine][commune] << evt
       end
@@ -143,18 +157,17 @@ TYPES_START
         incidents << "<strong>#{commune} #{  Commune.find_by_name(commune).present? ? ' (' + Commune.find_by_name(commune).department.to_s.rjust(2, '0') + ')' : ''} :</strong>" if commune.present?
         incidents << "<ul>"
         events.each do |event|
-          resume = event.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))
 
-          if (event.custom_field_value(CustomField.find(16)).present? || event.custom_field_value(CustomField.find(4)).present?)
+          if (event.custom_field_value(facts_custom_field).present? || event.custom_field_value(summary_custom_field).present?)
 
             incidents << <<TYPES_CONTENT
 
-            <strong><span style="background-color:#FFD700;">Incident #{event.custom_field_value(CustomField.find(2))}</span><br /></strong>
+            <strong><span style="background-color:#FFD700;">Incident #{event.custom_field_value(category_custom_field)}</span><br /></strong>
 
-            #{event.custom_field_value(CustomField.find(16)).present? ? event.custom_field_value(CustomField.find(16)) : event.custom_field_value(CustomField.find(4))}<br/>
-            #{event.custom_field_value(CustomField.find(7)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+event.custom_field_value(CustomField.find(7)).to_s+' morts.</span><br/>').html_safe : ''}
-            #{event.custom_field_value(CustomField.find(6)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+event.custom_field_value(CustomField.find(6)).to_s+' blessés.</span><br/>').html_safe : ''}
-            #{event.custom_field_value(CustomField.find(17))}
+            #{event.custom_field_value(facts_custom_field).present? ? event.custom_field_value(facts_custom_field) : event.custom_field_value(summary_custom_field)}<br/>
+            #{event.custom_field_value(dead_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+event.custom_field_value(dead_number_custom_field).to_s+' morts.</span><br/>').html_safe : ''}
+            #{event.custom_field_value(injured_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+event.custom_field_value(injured_number_custom_field).to_s+' blessés.</span><br/>').html_safe : ''}
+            #{event.custom_field_value(engaged_actions_custom_field)}
 
 TYPES_CONTENT
 

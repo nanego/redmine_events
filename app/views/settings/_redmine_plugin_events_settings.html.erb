@@ -57,6 +57,12 @@
       <%= select_tag "settings[consequence_field]", options_for_select(options, Setting['plugin_redmine_events']['consequence_field']) %>
     </td>
   </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_cabinets_field") %> :</th>
+    <td>
+      <%= select_tag "settings[cabinets_field]", options_for_select(options, Setting['plugin_redmine_events']['cabinets_field']) %>
+    </td>
+  </tr>
   </tbody>
 </table>
 

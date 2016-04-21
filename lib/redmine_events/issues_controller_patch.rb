@@ -130,8 +130,21 @@ class IssuesController
 
   def generate_flash_description(original_issue)
 
+    summary_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['summary_field'])
+    facts_custom_field = CustomField.find_by_id(16)
+    commune_custom_field = CustomField.find_by_id(11)
+    departements_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['department_field'])
+    domaine_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['domain_field'])
+    category_custom_field = CustomField.find_by_id(2)
+    dead_number_custom_field = CustomField.find_by_id(7)
+    injured_number_custom_field = CustomField.find_by_id(6)
+    engaged_actions_custom_field = CustomField.find_by_id(17)
+    cabinets_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['cabinets_field'])
+    terrorism_custom_field = CustomField.find_by_id(14)
+    media_custom_field = CustomField.find_by_id(15)
+
     event_description = @flash.description
-    commune = Commune.find_by_name(original_issue.custom_field_value(CustomField.find(11)))
+    commune = Commune.find_by_name(original_issue.custom_field_value(commune_custom_field))
 
     @flash.description = <<HEADER
       <br />
@@ -163,11 +176,11 @@ HEADER
               <div style="text-align: left;"><em>Sources : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
               </div>
               <br />
-              #{original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['summary_field']))}
+              #{original_issue.custom_field_value(summary_custom_field)}
               <br />
-              #{original_issue.custom_field_value(CustomField.find(5)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Cabinet informé.</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(CustomField.find(15)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(CustomField.find(14)).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
+              #{original_issue.custom_field_value(cabinets_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Cabinet informé.</em></span>".html_safe : ""}
+              #{original_issue.custom_field_value(terrorism_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
+              #{original_issue.custom_field_value(media_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
               </td>
             </tr>
           </tbody>
@@ -192,7 +205,7 @@ TITRE
         <tbody>
           <tr>
             <td style="text-align: center;"><strong><span style="font-size:14px;">
-              #{original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['domain_field'])).join('-')}
+              #{original_issue.custom_field_value(domaine_custom_field).join('-')}
             </span></strong></td>
           </tr>
         </tbody>
@@ -200,7 +213,7 @@ TITRE
       <br />
 DOMAINES
 
-    departments = original_issue.custom_field_value(CustomField.find(Setting['plugin_redmine_events']['department_field']))
+    departments = original_issue.custom_field_value(departements_custom_field)
     @flash.description << <<DESCRIPTION
       <div style="text-align: left;">
         <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 92%;">
@@ -214,10 +227,10 @@ DOMAINES
             </tr>
             <tr>
               <td>
-                #{original_issue.custom_field_value(CustomField.find(16))}<br/>
-                #{original_issue.custom_field_value(CustomField.find(7)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+original_issue.custom_field_value(CustomField.find(7)).to_s+' morts.</span><br/>').html_safe : ''}
-                #{original_issue.custom_field_value(CustomField.find(6)).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+original_issue.custom_field_value(CustomField.find(6)).to_s+' blessés.</span><br/>').html_safe : ''}
-                #{original_issue.custom_field_value(CustomField.find(17))}
+                #{original_issue.custom_field_value(facts_custom_field)}<br/>
+                #{original_issue.custom_field_value(dead_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+original_issue.custom_field_value(dead_number_custom_field).to_s+' morts.</span><br/>').html_safe : ''}
+                #{original_issue.custom_field_value(injured_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+original_issue.custom_field_value(injured_number_custom_field).to_s+' blessés.</span><br/>').html_safe : ''}
+                #{original_issue.custom_field_value(engaged_actions_custom_field)}
               </td>
             </tr>
           </tbody>
