@@ -142,6 +142,8 @@ class IssuesController
     cabinets_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['cabinets_field'])
     terrorism_custom_field = CustomField.find_by_id(14)
     media_custom_field = CustomField.find_by_id(15)
+    start_date_custom_field = CustomField.find_by_id(18)
+
 
     event_description = @flash.description
     commune = Commune.find_by_name(original_issue.custom_field_value(commune_custom_field))
@@ -172,8 +174,8 @@ HEADER
           <tbody>
             <tr>
               <td>
-              <div style="text-align: center;">
-              <div style="text-align: left;"><em>Sources : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
+              <div>
+                <div style="text-align: left;"><em>Sources : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
               </div>
               <br />
               #{original_issue.custom_field_value(summary_custom_field)}
@@ -181,6 +183,7 @@ HEADER
               #{original_issue.custom_field_value(cabinets_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Cabinet informé.</em></span>".html_safe : ""}
               #{original_issue.custom_field_value(terrorism_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
               #{original_issue.custom_field_value(media_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
+              #{original_issue.custom_field_value(start_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Début de l'événement : #{original_issue.custom_field_value(start_date_custom_field)}</em></span>".html_safe : ""}
               </td>
             </tr>
           </tbody>
