@@ -70,7 +70,6 @@ FAITS_MARQUANTS
     <tbody>
     <tr>
     <td>
-      <strong>Faits marquants</strong>
 FAITS_MARQUANTS_RESUMES_BEGIN
 
     major_events.each do |domaine, communes|
