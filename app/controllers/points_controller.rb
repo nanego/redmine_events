@@ -88,7 +88,7 @@ class PointsController < ApplicationController
   def generate_point_description(related_evts)
     @issue.description ||= ""
     @issue.description << point_header(@issue)
-    @issue.description << bulletin_main_facts(@issue, related_evts)
+    @issue.description << bulletin_main_facts(related_evts)
     @issue.description << bulletin_incidents(@issue, related_evts)
     @issue.description << bulletin_exercices
   end

@@ -66,7 +66,7 @@
           });
         },
         select: function (event, ui) {
-          $('#issue_custom_field_values_<%= department_field_id %>').val(ui.item.department + ' ' + ui.item.department_name);
+          $('#issue_custom_field_values_<%= department_field_id %>').val(ui.item.department_name + ' (' + ui.item.department + ')').trigger("change");
         }
       });
     <% end %>

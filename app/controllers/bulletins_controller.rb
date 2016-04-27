@@ -36,8 +36,10 @@ class BulletinsController < ApplicationController
     scope = @project ? @project.issues.visible : Issue.visible
 
     @bulletin = Issue.new # for adding bulletins inline
-    @bulletin.start_date = 1.day.ago.change({ hour: 8, min: 30 }).strftime('%d/%m/%Y %H:%M')
-    @bulletin.due_date = DateTime.now.change({ hour: 8, min: 30 }).strftime('%d/%m/%Y %H:%M')
+    start_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['start_date_field'])
+    @start_date_value = CustomFieldValue.new(:customized => self, :custom_field => start_date_custom_field, :value => 1.day.ago.change({ hour: 8, min: 30 }).strftime('%d/%m/%Y %H:%M'))
+    end_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['end_date_field'])
+    @end_date_value = CustomFieldValue.new(:customized => self, :custom_field => end_date_custom_field, :value => DateTime.now.change({ hour: 8, min: 30 }).strftime('%d/%m/%Y %H:%M'))
 
     @bulletins = scope.includes([:author, :project]).
         joins(:tracker).
@@ -47,24 +49,33 @@ class BulletinsController < ApplicationController
   end
 
   def create
+
+    start_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['start_date_field'])
+    @start_date_value = CustomFieldValue.new(:customized => self, :custom_field => start_date_custom_field, :value => params[:issue][:custom_field_values][start_date_custom_field.id])
+    end_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['end_date_field'])
+    @end_date_value = CustomFieldValue.new(:customized => self, :custom_field => end_date_custom_field, :value => params[:issue][:custom_field_values][end_date_custom_field.id])
+
     @project = Project.find(params[:project_id]) if params[:project_id].present?
     build_new_issue_from_params
 
-    @issue.start_date = DateTime.parse(params['issue']['start_date'])
-    @issue.due_date = DateTime.parse(params['issue']['due_date'])
     @issue.subject = "Bulletin quotidien CMVOA"
 
     if @issue.save
 
+      # Add custom fields
+      @issue.custom_field_values = params[:issue][:custom_field_values]
+      @issue.save_custom_field_values
+
       related_evts = Issue.joins(:tracker)
                          .where("trackers.name LIKE '%Fiche %'")
-                         .where("updated_on >= ? AND updated_on <= ?", @issue.start_date, @issue.due_date)
+                         .where("updated_on >= ? AND updated_on <= ?", DateTime.parse(@issue.custom_value_for(start_date_custom_field).value), DateTime.parse(@issue.custom_value_for(end_date_custom_field).value))
 
       generate_bulletin_description(related_evts)
 
       @issue.subject = "Bulletin quotidien CMVOA N°#{@issue.id}"
       @issue.save
 
+      # Add relations
       related_evts.each do |evt|
         @relation = IssueRelation.new(:relation_type => 'relates')
         @relation.issue_to_id = evt.id
@@ -92,13 +103,13 @@ class BulletinsController < ApplicationController
   def generate_bulletin_description(related_evts)
     @issue.description ||= ""
     @issue.description << bulletin_header(@issue)
-    @issue.description << bulletin_main_facts(@issue, related_evts)
+    @issue.description << bulletin_main_facts(related_evts)
     @issue.description << bulletin_incidents(@issue, related_evts)
     @issue.description << bulletin_exercices
   end
 
   def show
-    @issue = Issue.find(params[:id])
+    @issue = Issue.find_by_id(params[:id])
     @project = @issue.project
 
     @journals = @issue.journals.includes(:user, :details)

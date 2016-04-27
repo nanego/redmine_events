@@ -2,7 +2,7 @@ module EventsHelper
 
   include IssuesHelper
 
-  def common_header(doc, title)
+  def common_header(title, dates)
     <<HEADER
       <br />
       <div style="text-align: center;margin-top:10px;">
@@ -15,7 +15,9 @@ module EventsHelper
               Service de Défense, de Sécurité et d'Intelligence Économique<br />
               <br />
               <span style="font-size: 18px;">#{title}</span></strong><br />
-              du #{ I18n.l doc.start_date, format: :complete } au #{ I18n.l doc.due_date, format: :complete }</span></td>
+                #{dates}
+              </span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -25,27 +27,33 @@ HEADER
   end
 
   def bulletin_header(bulletin)
-    common_header(bulletin, "BULLETIN  QUOTIDIEN  CMVOA N° #{bulletin.id}")
+    start_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['start_date_field'])
+    end_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['end_date_field'])
+    common_header("BULLETIN  QUOTIDIEN  CMVOA N° #{bulletin.id}", "du #{ bulletin.custom_value_for(start_date_custom_field) } au #{ bulletin.custom_value_for(end_date_custom_field) }")
   end
 
   def point_header(point)
-    common_header(point, "POINT DE SITUATION N° #{point.id}")
+    common_header("POINT DE SITUATION N° #{point.id}", "")
   end
 
-  def bulletin_main_facts(event, related_evts)
-
-    summary_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['summary_field'])
-    commune_custom_field = CustomField.find_by_id(11)
+  def grouped_events_by_domain(events)
     departements_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['department_field'])
-
-    major_events = {}
-    related_evts.each do |evt|
+    grouped_events = {}
+    events.each do |evt|
       domaine=evt.custom_field_value(CustomField.find_by_name('Domaines')).first
-      major_events[domaine] ||= {}
-      commune = evt.custom_field_value(CustomField.find_by_name('Commune'))
-      major_events[domaine][commune] ||= []
-      major_events[domaine][commune] << evt
+      grouped_events[domaine] ||= {}
+      departments = evt.custom_field_value(departements_custom_field)
+      grouped_events[domaine][departments] ||= []
+      grouped_events[domaine][departments] << evt
     end
+    grouped_events
+  end
+
+  def bulletin_main_facts(related_evts)
+
+    # Init data
+    summary_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['summary_field'])
+    events_by_domain = grouped_events_by_domain(related_evts)
 
     main_facts = <<FAITS_MARQUANTS
       <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(220, 220, 220);">
@@ -72,15 +80,16 @@ FAITS_MARQUANTS
     <td>
 FAITS_MARQUANTS_RESUMES_BEGIN
 
-    major_events.each do |domaine, communes|
+    events_by_domain.each do |domaine, departments|
       # main_facts << "\n## #{domaine}"
-      communes.each do |commune, events|
+      departments.each do |department, events|
         events.each do |event|
           resume = event.custom_field_value(summary_custom_field)
+          department = department.join(', ') if department.kind_of? Array
           if resume.present? && event.priority_id >= 3
             main_facts << <<LIST_FAITS_MARQUANTS
   <ul>
-	  <li>#{event.custom_field_value(commune_custom_field).present? ? (event.custom_field_value(commune_custom_field) + ( Commune.find_by_name(event.custom_field_value(commune_custom_field)).present? ? ' (' + Commune.find_by_name(event.custom_field_value(commune_custom_field)).department.to_s.rjust(2, '0') + ')' : '') )  : event.custom_field_value(departements_custom_field)} : #{resume}</li>
+	  <li>#{department} : #{resume}</li>
     </ul>
 LIST_FAITS_MARQUANTS
           end
@@ -104,12 +113,13 @@ FAITS_MARQUANTS_RESUMES_END
 
     summary_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['summary_field'])
     facts_custom_field = CustomField.find_by_id(16)
-    commune_custom_field = CustomField.find_by_id(11)
-    domaine_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['domain_field'])
     category_custom_field = CustomField.find_by_id(2)
     dead_number_custom_field = CustomField.find_by_id(7)
     injured_number_custom_field = CustomField.find_by_id(6)
     engaged_actions_custom_field = CustomField.find_by_id(17)
+
+    events_by_domain = grouped_events_by_domain(related_evts)
+
 
     incidents = <<INCIDENTS
 <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(220, 220, 220);">
@@ -122,17 +132,7 @@ FAITS_MARQUANTS_RESUMES_END
 <br/>
 INCIDENTS
 
-    events = {}
-    related_evts.each do |evt|
-      evt.custom_field_value(domaine_custom_field).each do |domaine|
-        events[domaine] ||= {}
-        commune = evt.custom_field_value(commune_custom_field)
-        events[domaine][commune] ||= []
-        events[domaine][commune] << evt
-      end
-    end
-
-    events.each do |domaine, communes|
+    events_by_domain.each do |domaine, departments|
       incidents << <<DOMAINES
 <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(240, 240, 240);">
 	<tbody>
@@ -152,8 +152,9 @@ DOMAINES
 			<td>
 TYPES_START
 
-      communes.each do |commune, events|
-        incidents << "<strong>#{commune} #{  Commune.find_by_name(commune).present? ? ' (' + Commune.find_by_name(commune).department.to_s.rjust(2, '0') + ')' : ''} :</strong>" if commune.present?
+      departments.each do |department, events|
+        department = department.join(', ') if department.kind_of? Array
+        incidents << "<strong>#{department}:</strong>"
         incidents << "<ul>"
         events.each do |event|
 
