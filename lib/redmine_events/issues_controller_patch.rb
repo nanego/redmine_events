@@ -108,7 +108,7 @@ class IssuesController
 
       # Archive old flashes
       @original_issue.relations.each do |relation|
-        flash = Issue.find(relation.issue_to_id)
+        flash = Issue.find_by_id(relation.issue_to_id)
         if flash.id!=@flash.id && flash.tracker==Tracker.find_by_name('Flash')
           flash.status = IssueStatus.find_by_name('Archivé')
           flash.save
@@ -128,8 +128,19 @@ class IssuesController
 
   end
 
-  def generate_flash_description(original_issue)
+  def list_cabinets(issue)
+    cabinets_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['cabinets_field'])
+    if issue.custom_field_value(cabinets_custom_field).any?
+      text = "<br /><span style='font-size:12px;'><em>Cabinets informés :</em></span>"
+      issue.custom_field_value(cabinets_custom_field).each do |cab|
+        text << "<br /><span style='font-size:12px;'><em>- #{cab}</em></span>"
+      end
+      text << "<br />"
+    end
+    text.html_safe
+  end
 
+  def generate_flash_description(original_issue)
     summary_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['summary_field'])
     facts_custom_field = CustomField.find_by_id(16)
     commune_custom_field = CustomField.find_by_id(11)
@@ -139,11 +150,9 @@ class IssuesController
     dead_number_custom_field = CustomField.find_by_id(7)
     injured_number_custom_field = CustomField.find_by_id(6)
     engaged_actions_custom_field = CustomField.find_by_id(17)
-    cabinets_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['cabinets_field'])
     terrorism_custom_field = CustomField.find_by_id(14)
     media_custom_field = CustomField.find_by_id(15)
     start_date_custom_field = CustomField.find_by_id(18)
-
 
     event_description = @flash.description
     commune = Commune.find_by_name(original_issue.custom_field_value(commune_custom_field))
@@ -180,9 +189,9 @@ HEADER
               <br />
               #{original_issue.custom_field_value(summary_custom_field)}
               <br />
-              #{original_issue.custom_field_value(cabinets_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Cabinet informé.</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(terrorism_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(media_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
+              #{list_cabinets(original_issue)}
+              #{original_issue.custom_field_value(media_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
+              #{original_issue.custom_field_value(terrorism_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
               #{original_issue.custom_field_value(start_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Début de l'événement : #{original_issue.custom_field_value(start_date_custom_field)}</em></span>".html_safe : ""}
               </td>
             </tr>
