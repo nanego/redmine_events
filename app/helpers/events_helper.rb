@@ -10,8 +10,8 @@ module EventsHelper
           <tbody>
             <tr>
               <td>#{Setting['plugin_redmine_events']['logo_ministere']}<br/>
-              <span style="text-align: center; font-family: arial, helvetica, sans-serif;"><strong>Ministère de l'Écologie, du Développement durable et de l'Énergie<br />
-              Ministère du Logement, de l'Égalité des territoires et de la Ruralité<br />
+              <span style="text-align: center; font-family: arial, helvetica, sans-serif;"><strong>Ministère de l'Environnement, de l’Énergie et de la Mer<br />
+              Ministère du Logement et de l'Habitat Durable<br />
               Service de Défense, de Sécurité et d'Intelligence Économique<br />
               <br />
               <span style="font-size: 18px;">#{title}</span></strong><br />
