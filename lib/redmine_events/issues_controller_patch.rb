@@ -154,7 +154,8 @@ class IssuesController
     engaged_actions_custom_field = CustomField.find_by_id(17)
     terrorism_custom_field = CustomField.find_by_id(14)
     media_custom_field = CustomField.find_by_id(15)
-    start_date_custom_field = CustomField.find_by_id(18)
+    start_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['start_date_field'])
+    end_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['end_date_field'])
 
     event_description = @flash.description
     commune = Commune.find_by_name(original_issue.custom_field_value(commune_custom_field))
@@ -195,6 +196,7 @@ HEADER
               #{original_issue.custom_field_value(media_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
               #{original_issue.custom_field_value(terrorism_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
               #{original_issue.custom_field_value(start_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Début de l'événement : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(start_date_custom_field)), format: :complete)}</em></span>".html_safe : ""}
+              #{original_issue.custom_field_value(end_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Fin de l'événement : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(end_date_custom_field)), format: :complete)}</em></span>".html_safe : ""}
               </td>
             </tr>
           </tbody>
