@@ -130,14 +130,16 @@ class IssuesController
 
   def list_cabinets(issue)
     cabinets_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['cabinets_field'])
-    if issue.custom_field_value(cabinets_custom_field).any?
+    if issue.custom_field_value(cabinets_custom_field).any? { |c| c.present? }
       text = "<br /><span style='font-size:12px;'><em>Cabinets informés :</em></span>"
       issue.custom_field_value(cabinets_custom_field).each do |cab|
-        text << "<br /><span style='font-size:12px;'><em>- #{cab}</em></span>"
+        text << "<br /><span style='font-size:12px;'><em>- #{cab}</em></span>" if cab.present?
       end
       text << "<br />"
+      text.html_safe
+    else
+      ""
     end
-    text.html_safe
   end
 
   def generate_flash_description(original_issue)
