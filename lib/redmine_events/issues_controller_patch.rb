@@ -194,7 +194,7 @@ HEADER
               #{list_cabinets(original_issue)}
               #{original_issue.custom_field_value(media_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
               #{original_issue.custom_field_value(terrorism_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(start_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Début de l'événement : #{original_issue.custom_field_value(start_date_custom_field)}</em></span>".html_safe : ""}
+              #{original_issue.custom_field_value(start_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Début de l'événement : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(start_date_custom_field)), format: :complete)}</em></span>".html_safe : ""}
               </td>
             </tr>
           </tbody>

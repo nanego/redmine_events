@@ -29,7 +29,7 @@ HEADER
   def bulletin_header(bulletin)
     start_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['start_date_field'])
     end_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['end_date_field'])
-    common_header("BULLETIN  QUOTIDIEN  CMVOA N° #{bulletin.id}", "du #{ bulletin.custom_value_for(start_date_custom_field) } au #{ bulletin.custom_value_for(end_date_custom_field) }")
+    common_header("BULLETIN  QUOTIDIEN  CMVOA N° #{bulletin.id}", "du #{ I18n.l(DateTime.parse(bulletin.custom_value_for(start_date_custom_field).to_s), format: :complete) } au #{ I18n.l(DateTime.parse(bulletin.custom_value_for(end_date_custom_field).to_s), format: :complete) }")
   end
 
   def point_header(point)
