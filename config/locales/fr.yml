@@ -45,5 +45,9 @@ fr:
   setting_department_field: Champ Département
   setting_summary_field: Champ Résumé
   setting_domain_field: Champ Domaine
-  setting_consequence_field: Champ Conséquences
+  setting_consequence_field: Champ Catégorie
   wiki_toolbar_custom_fields: Champs utilisant CKEditor
+  setting_cabinets_field: Champ Cabinets informés
+  setting_start_date_field: Champ Date de début
+  setting_end_date_field: Champ Date de fin
+
