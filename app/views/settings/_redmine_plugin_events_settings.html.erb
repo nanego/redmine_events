@@ -75,6 +75,12 @@
       <%= select_tag "settings[end_date_field]", options_for_select(options, Setting['plugin_redmine_events']['end_date_field']) %>
     </td>
   </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_event_title_field") %> :</th>
+    <td>
+      <%= select_tag "settings[event_title_field]", options_for_select(options, Setting['plugin_redmine_events']['event_title_field']) %>
+    </td>
+  </tr>
   </tbody>
 </table>
 

@@ -87,7 +87,7 @@ class IssuesController
 
   def create_flash
 
-    @original_issue = Issue.find(params[:issue_id])
+    @original_issue = Issue.find_by_id(params[:issue_id])
 
     @flash = Issue.new
     @flash.copy_from(@original_issue, :attachments => nil, :subtasks => nil)
@@ -156,6 +156,7 @@ class IssuesController
     media_custom_field = CustomField.find_by_id(15)
     start_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['start_date_field'])
     end_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['end_date_field'])
+    event_title_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['event_title_field'])
 
     event_description = @flash.description
     commune = Commune.find_by_name(original_issue.custom_field_value(commune_custom_field))
@@ -209,7 +210,7 @@ RESUME
       <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(230, 230, 230);">
         <tbody>
           <tr>
-            <td style="text-align: center;"><span style="font-size:18px;">#{@flash.subject}</span></td>
+            <td style="text-align: center;"><span style="font-size:18px;">#{original_issue.custom_field_value(event_title_custom_field).present? ? original_issue.custom_field_value(event_title_custom_field) : @flash.subject}</span></td>
           </tr>
         </tbody>
       </table>
@@ -267,7 +268,7 @@ DESCRIPTION
   end
 
   def send_flash
-    @original_issue = Issue.find(params[:issue_id])
+    @original_issue = Issue.find_by_id(params[:issue_id])
     Mailer.deliver_flash(@original_issue)
   end
 
