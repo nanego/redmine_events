@@ -256,6 +256,10 @@ DOMAINES
       <br />
 DESCRIPTION
 
+    @flash.description << <<SOURCES
+     <div style="text-align: right;"><em>Sources : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
+SOURCES
+
   end
 
 
