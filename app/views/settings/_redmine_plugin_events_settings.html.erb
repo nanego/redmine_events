@@ -1,5 +1,5 @@
 <%
-   all_fields = CustomField.select("id, name").where(:type => "IssueCustomField")
+   all_fields = CustomField.select("id, name").where(:type => "IssueCustomField").order('lower(name)')
    options = []
    all_fields.each do |f|
      options << [f.name, f.id]
@@ -85,6 +85,18 @@
     <th style="text-align: right;"><%= l("setting_infra_map_field") %> :</th>
     <td>
       <%= select_tag "settings[infra_map_field]", options_for_select(options, Setting['plugin_redmine_events']['infra_map_field']) %>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_infra_map_field") %> :</th>
+    <td>
+      <%= select_tag "settings[infra_map_field]", options_for_select(options, Setting['plugin_redmine_events']['infra_map_field']) %>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_last_updated_at_field") %> :</th>
+    <td>
+      <%= select_tag "settings[last_updated_at_field]", options_for_select(options, Setting['plugin_redmine_events']['last_updated_at_field']) %>
     </td>
   </tr>
   </tbody>
