@@ -81,6 +81,12 @@
       <%= select_tag "settings[event_title_field]", options_for_select(options, Setting['plugin_redmine_events']['event_title_field']) %>
     </td>
   </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_infra_map_field") %> :</th>
+    <td>
+      <%= select_tag "settings[infra_map_field]", options_for_select(options, Setting['plugin_redmine_events']['infra_map_field']) %>
+    </td>
+  </tr>
   </tbody>
 </table>
 
