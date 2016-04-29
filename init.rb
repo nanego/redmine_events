@@ -7,6 +7,7 @@ Rails.application.config.to_prepare do
   require_dependency 'redmine_events/less_mail_patch' unless Rails.env.test?
   require_dependency 'redmine_events/issue_query_patch' unless Rails.env.test?
   require_dependency 'redmine_events/issues_helper_patch'
+  require_dependency 'redmine_events/custom_fields_helper_patch'
   require_dependency 'redmine_events/issue_patch'
   require_dependency 'redmine_events/custom_field_value_patch'
   require_dependency 'redmine_events/mailer_patch'

@@ -128,4 +128,5 @@ module IssuesHelper
       l(:text_journal_deleted, :label => label, :old => old_value).html_safe
     end
   end
+
 end
