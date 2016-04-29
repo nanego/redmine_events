@@ -88,15 +88,39 @@
     </td>
   </tr>
   <tr>
-    <th style="text-align: right;"><%= l("setting_infra_map_field") %> :</th>
-    <td>
-      <%= select_tag "settings[infra_map_field]", options_for_select(options, Setting['plugin_redmine_events']['infra_map_field']) %>
-    </td>
-  </tr>
-  <tr>
     <th style="text-align: right;"><%= l("setting_last_updated_at_field") %> :</th>
     <td>
       <%= select_tag "settings[last_updated_at_field]", options_for_select(options, Setting['plugin_redmine_events']['last_updated_at_field']) %>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_number_of_deads_field") %> :</th>
+    <td>
+      <%= select_tag "settings[number_of_deads_field]", options_for_select(options, Setting['plugin_redmine_events']['number_of_deads_field']) %>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_number_of_lost_field") %> :</th>
+    <td>
+      <%= select_tag "settings[number_of_lost_field]", options_for_select(options, Setting['plugin_redmine_events']['number_of_lost_field']) %>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_number_of_badly_wounded_field") %> :</th>
+    <td>
+      <%= select_tag "settings[number_of_badly_wounded_field]", options_for_select(options, Setting['plugin_redmine_events']['number_of_badly_wounded_field']) %>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_number_of_slightly_wounded_field") %> :</th>
+    <td>
+      <%= select_tag "settings[number_of_slightly_wounded_field]", options_for_select(options, Setting['plugin_redmine_events']['number_of_slightly_wounded_field']) %>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("setting_number_of_wounded_field") %> :</th>
+    <td>
+      <%= select_tag "settings[number_of_wounded_field]", options_for_select(options, Setting['plugin_redmine_events']['number_of_wounded_field']) %>
     </td>
   </tr>
   </tbody>

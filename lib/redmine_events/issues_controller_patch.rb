@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require_dependency 'issues_controller'
+include ActionView::Helpers::TextHelper
 
 class IssuesController
 
@@ -149,8 +150,13 @@ class IssuesController
     departements_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['department_field'])
     domaine_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['domain_field'])
     category_custom_field = CustomField.find_by_id(2)
-    dead_number_custom_field = CustomField.find_by_id(7)
-    injured_number_custom_field = CustomField.find_by_id(6)
+
+    dead_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_deads_field'])
+    badly_wounded_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_badly_wounded_field'])
+    slightly_wounded_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_slightly_wounded_field'])
+    wounded_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_wounded_field'])
+    lost_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_lost_field'])
+
     engaged_actions_custom_field = CustomField.find_by_id(17)
     terrorism_custom_field = CustomField.find_by_id(14)
     media_custom_field = CustomField.find_by_id(15)
@@ -189,7 +195,7 @@ HEADER
             <tr>
               <td>
               <div>
-                <div style="text-align: left;"><em>Sources : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em>
+                <div style="text-align: left;"><em>#{'Source'.pluralize(original_issue.taggings.size)} : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em>
                   #{original_issue.custom_field_value(last_updated_at_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Dernière information : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(last_updated_at_custom_field)), format: :complete)}</em></span>".html_safe : ""}
                 </div>
               </div>
@@ -249,8 +255,11 @@ DOMAINES
             <tr>
               <td>
                 #{original_issue.custom_field_value(facts_custom_field)}<br/>
-                #{original_issue.custom_field_value(dead_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+original_issue.custom_field_value(dead_number_custom_field).to_s+' morts.</span><br/>').html_safe : ''}
-                #{original_issue.custom_field_value(injured_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+original_issue.custom_field_value(injured_number_custom_field).to_s+' blessés.</span><br/>').html_safe : ''}
+                #{original_issue.custom_field_value(dead_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(dead_number_custom_field), 'mort')+'</span><br/>').html_safe : ''}
+                #{original_issue.custom_field_value(lost_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(lost_number_custom_field), 'disparu')+'</span><br/>').html_safe : ''}
+                #{original_issue.custom_field_value(badly_wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(badly_wounded_number_custom_field), 'blessé')+'</span><br/>').html_safe : ''}
+                #{original_issue.custom_field_value(slightly_wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(slightly_wounded_number_custom_field), 'blessé')+'</span><br/>').html_safe : ''}
+                #{original_issue.custom_field_value(wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(wounded_number_custom_field), 'blessé')+'</span><br/>').html_safe : ''}
                 #{original_issue.custom_field_value(engaged_actions_custom_field)}
               </td>
             </tr>
@@ -261,7 +270,7 @@ DOMAINES
 DESCRIPTION
 
     @flash.description << <<SOURCES
-     <div style="text-align: right;"><em>Sources : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
+     <div style="text-align: right;"><em>#{'Source'.pluralize(original_issue.taggings.size)} : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
 SOURCES
 
   end
