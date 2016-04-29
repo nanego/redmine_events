@@ -248,7 +248,11 @@ DOMAINES
             <tr>
               <td>
                 <b>
-                  #{commune.present? && departments.size < 2 ? (commune.department_name.to_s + ' (' + commune.department.to_s.rjust(2, '0') + ')' )  : departments.join(', ')} :
+                  #{if commune.present? || departments.any?{|d|d.present?}
+                      txt = commune.present? && departments.size < 2 ? (commune.department_name.to_s + ' (' + commune.department.to_s.rjust(2, '0') + ')' )  : departments.join(', ')
+                      txt << ' :'
+                      txt
+                    end}
                 </b>
               </td>
             </tr>
