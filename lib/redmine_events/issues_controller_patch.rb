@@ -12,12 +12,12 @@ class IssuesController
 
   def description
     respond_to do |format|
-      format.html { render :pdf => "flash",
+      format.html { render :pdf => "#{@issue.subject}",
                            :layout => 'pdf.html',
                            :background => true,
                            :no_background => false,
                            :show_as_html => true }
-      format.pdf { render :pdf => "flash",
+      format.pdf { render :pdf => "#{@issue.subject}",
                           :layout => 'pdf.html',
                           :show_as_html => params[:debug].present?,
                           :margin => {:bottom => 40},
