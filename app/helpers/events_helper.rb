@@ -118,6 +118,9 @@ FAITS_MARQUANTS_RESUMES_END
     injured_number_custom_field = CustomField.find_by_id(6)
     engaged_actions_custom_field = CustomField.find_by_id(17)
 
+    start_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['start_date_field'])
+    last_updated_at_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['last_updated_at_field'])
+
     events_by_domain = grouped_events_by_domain(related_evts)
 
 
@@ -150,18 +153,28 @@ TYPES_START
         incidents << "<ul>"
         events.each do |event|
 
+          start_date =  DateTime.parse(event.custom_field_value(start_date_custom_field)) if event.custom_field_value(start_date_custom_field).present?
+          last_updated_at =  DateTime.parse(event.custom_field_value(last_updated_at_custom_field)) if event.custom_field_value(last_updated_at_custom_field).present?
+          # TODO Check if we should really use last_updated_at when start_date is empty
+
           if (event.custom_field_value(facts_custom_field).present? || event.custom_field_value(summary_custom_field).present?)
 
-            incidents << <<TYPES_CONTENT
+            incidents << <<EVENT_CONTENT
 
             <strong><span style="background-color:#FFD700;">Incident #{event.custom_field_value(category_custom_field)}</span><br /></strong>
 
-            #{event.custom_field_value(facts_custom_field).present? ? event.custom_field_value(facts_custom_field) : event.custom_field_value(summary_custom_field)}<br/>
+            #{event.custom_field_value(facts_custom_field).present? ? event.custom_field_value(facts_custom_field) : event.custom_field_value(summary_custom_field)}
+            Le #{ I18n.l((start_date || last_updated_at), format: :complete_without_year) if (start_date || last_updated_at) }
+            <br/>
             #{event.custom_field_value(dead_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+event.custom_field_value(dead_number_custom_field).to_s+' morts.</span><br/>').html_safe : ''}
             #{event.custom_field_value(injured_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+event.custom_field_value(injured_number_custom_field).to_s+' blessés.</span><br/>').html_safe : ''}
             #{event.custom_field_value(engaged_actions_custom_field)}
 
-TYPES_CONTENT
+EVENT_CONTENT
+
+            incidents << <<SOURCES
+            <div style="text-align: right;"><em>#{'Source'.pluralize(event.taggings.size)} : #{event.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
+SOURCES
 
           end
 
