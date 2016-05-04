@@ -133,17 +133,9 @@ FAITS_MARQUANTS_RESUMES_END
 INCIDENTS
 
     events_by_domain.each do |domaine, departments|
-      incidents << <<DOMAINES
-<table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(240, 240, 240);">
-	<tbody>
-		<tr>
-			<td><strong><span style="font-size:16px;"> #{domaine}</span></strong></td>
-		</tr>
-	</tbody>
-</table>
-<BR/>
-DOMAINES
+      incidents << titre_domaine(domaine)
 
+      incidents << tableau_qualite_de_l_air if domaine.include?('Environnement')
 
       incidents << <<TYPES_START
 <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
@@ -186,7 +178,78 @@ TYPES_STOP
 
     end
 
+    unless events_by_domain.map{|domaine,value| domaine }.any?{|domaine| domaine.include?('Environnement')}
+      incidents << sous_domaine_environnement
+    end
+
     return incidents
+  end
+
+  def sous_domaine_environnement
+    txt = titre_domaine('Environnement, Risques industriels')
+    txt << tableau_qualite_de_l_air
+    txt
+  end
+
+  def titre_domaine(domaine)
+    txt = <<DOMAINES
+    <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(240, 240, 240);">
+      <tbody>
+        <tr>
+          <td><strong><span style="font-size:16px;"> #{domaine}</span></strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <BR/>
+DOMAINES
+    txt
+  end
+
+  def tableau_qualite_de_l_air
+    <<QUALITE_DE_L_AIR
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
+      <tbody>
+        <tr>
+          <td>
+          <ul>
+            <li>Le Laboratoire Central de Surveillance de la Qualité de l'Air informe (base de données nationale) :</li>
+          </ul>
+
+          <table align="center" border="1" cellpadding="0" cellspacing="0" style="width:90%;">
+            <tbody>
+              <tr>
+                <td style="text-align: center;"> </td>
+                <td style="text-align: center;border:1px #000000 solid;">18 aout</td>
+                <td style="text-align: center;border:1px #000000 solid;">19 aout</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;"> </td>
+                <td style="text-align: center;border:1px #000000 solid;">24 régions renseignées</td>
+                <td style="text-align: center;border:1px #000000 solid;">22 régions renseignées</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;border:1px #000000 solid;"><span style="color:#FF8C00;">Qualité de l'air<br />
+                <strong>moyenne à médiocre</strong><br />
+                (niveau 5 à 7 de l'indice ATMO)</span></td>
+                <td style="text-align: center;border:1px #000000 solid;">18 agglomérations situées dans 7 régions</td>
+                <td style="text-align: center;border:1px #000000 solid;">31 agglomérations situées dans 8 régions</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;border:1px #000000 solid;"><strong>Mesures préfectorales déclenchées</strong></td>
+                <td style="text-align: center;border:1px #000000 solid;">Néant</td>
+                <td style="text-align: center;border:1px #000000 solid;">Néant</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="text-align: center;"><a href="http://www.lcsqa.org" target="_blank">Consultation du site du LCSQA</a></div>
+
+          <div style="text-align: right;">Sources : LCSQA, Météo France</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+QUALITE_DE_L_AIR
   end
 
   def bulletin_exercices
