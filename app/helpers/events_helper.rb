@@ -40,11 +40,13 @@ HEADER
     departements_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['department_field'])
     grouped_events = {}
     events.each do |evt|
-      domaine=evt.custom_field_value(CustomField.find_by_name('Domaines')).first
-      grouped_events[domaine] ||= {}
-      departments = evt.custom_field_value(departements_custom_field)
-      grouped_events[domaine][departments] ||= []
-      grouped_events[domaine][departments] << evt
+      domaines=evt.custom_field_value(CustomField.find_by_name('Domaines'))
+      domaines.each do |domaine|
+        grouped_events[domaine] ||= {}
+        departments = evt.custom_field_value(departements_custom_field)
+        grouped_events[domaine][departments] ||= []
+        grouped_events[domaine][departments] << evt
+      end
     end
     grouped_events
   end
