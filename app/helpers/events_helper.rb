@@ -118,9 +118,13 @@ FAITS_MARQUANTS_RESUMES_END
     summary_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['summary_field'])
     facts_custom_field = CustomField.find_by_id(16)
     category_custom_field = CustomField.find_by_id(2)
-    dead_number_custom_field = CustomField.find_by_id(7)
-    injured_number_custom_field = CustomField.find_by_id(6)
     engaged_actions_custom_field = CustomField.find_by_id(17)
+
+    dead_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_deads_field'])
+    badly_wounded_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_badly_wounded_field'])
+    slightly_wounded_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_slightly_wounded_field'])
+    wounded_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_wounded_field'])
+    lost_number_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['number_of_lost_field'])
 
     start_date_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['start_date_field'])
     last_updated_at_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['last_updated_at_field'])
@@ -170,8 +174,12 @@ TYPES_START
             #{event.custom_field_value(facts_custom_field).present? ? event.custom_field_value(facts_custom_field) : event.custom_field_value(summary_custom_field)}
             Le #{ I18n.l((start_date || last_updated_at), format: :complete_without_year) if (start_date || last_updated_at) }
             <br/>
-            #{event.custom_field_value(dead_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+event.custom_field_value(dead_number_custom_field).to_s+' morts.</span><br/>').html_safe : ''}
-            #{event.custom_field_value(injured_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+event.custom_field_value(injured_number_custom_field).to_s+' blessés.</span><br/>').html_safe : ''}
+            #{event.custom_field_value(dead_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+pluralize(event.custom_field_value(dead_number_custom_field), 'mort')+(event.custom_value_for(dead_number_custom_field).comment.present? ? " (#{event.custom_value_for(dead_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+            #{event.custom_field_value(lost_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+pluralize(event.custom_field_value(lost_number_custom_field), 'disparu')+(event.custom_value_for(lost_number_custom_field).comment.present? ? " (#{event.custom_value_for(lost_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+            #{event.custom_field_value(badly_wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\' /><span style="padding-left: .6em;">'+pluralize(event.custom_field_value(badly_wounded_number_custom_field), 'blessé')+' '+'grave'.pluralize(event.custom_field_value(badly_wounded_number_custom_field).to_i)+(event.custom_value_for(badly_wounded_number_custom_field).comment.present? ? " (#{event.custom_value_for(badly_wounded_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+            #{event.custom_field_value(slightly_wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+pluralize(event.custom_field_value(slightly_wounded_number_custom_field), 'blessé')+' '+'léger'.pluralize(event.custom_field_value(slightly_wounded_number_custom_field).to_i)+(event.custom_value_for(slightly_wounded_number_custom_field).comment.present? ? " (#{event.custom_value_for(slightly_wounded_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+            #{event.custom_field_value(wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\' /><span style="padding-left: .6em;">'+pluralize(event.custom_field_value(wounded_number_custom_field), 'blessé')+(event.custom_value_for(wounded_number_custom_field).comment.present? ? " (#{event.custom_value_for(wounded_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+
             #{event.custom_field_value(engaged_actions_custom_field)}
 
 EVENT_CONTENT
@@ -236,20 +244,20 @@ DOMAINES
             <tbody>
               <tr>
                 <td style="text-align: center;"> </td>
-                <td style="text-align: center;border:1px #000000 solid;">18 aout</td>
-                <td style="text-align: center;border:1px #000000 solid;">19 aout</td>
+                <td style="text-align: center;border:1px #000000 solid;">--date à renseigner--</td>
+                <td style="text-align: center;border:1px #000000 solid;">--date à renseigner--</td>
               </tr>
               <tr>
                 <td style="text-align: center;"> </td>
-                <td style="text-align: center;border:1px #000000 solid;">24 régions renseignées</td>
-                <td style="text-align: center;border:1px #000000 solid;">22 régions renseignées</td>
+                <td style="text-align: center;border:1px #000000 solid;">XX régions renseignées</td>
+                <td style="text-align: center;border:1px #000000 solid;">XX régions renseignées</td>
               </tr>
               <tr>
                 <td style="text-align: center;border:1px #000000 solid;"><span style="color:#FF8C00;">Qualité de l'air<br />
                 <strong>moyenne à médiocre</strong><br />
                 (niveau 5 à 7 de l'indice ATMO)</span></td>
-                <td style="text-align: center;border:1px #000000 solid;">18 agglomérations situées dans 7 régions</td>
-                <td style="text-align: center;border:1px #000000 solid;">31 agglomérations situées dans 8 régions</td>
+                <td style="text-align: center;border:1px #000000 solid;">XX agglomérations situées dans X régions</td>
+                <td style="text-align: center;border:1px #000000 solid;">XX agglomérations situées dans X régions</td>
               </tr>
               <tr>
                 <td style="text-align: center;border:1px #000000 solid;"><strong>Mesures préfectorales déclenchées</strong></td>
