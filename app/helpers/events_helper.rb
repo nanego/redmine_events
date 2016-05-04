@@ -109,7 +109,9 @@ FAITS_MARQUANTS_RESUMES_END
 
   end
 
-  def bulletin_incidents(event, related_evts)
+  def bulletin_incidents(document, related_evts)
+
+    show_general_information = document.tracker==Tracker.find_by_name('Bulletin de synthèse')
 
     summary_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['summary_field'])
     facts_custom_field = CustomField.find_by_id(16)
@@ -138,7 +140,7 @@ INCIDENTS
     events_by_domain.each do |domaine, departments|
       incidents << titre_domaine(domaine)
 
-      incidents << tableau_qualite_de_l_air if domaine.include?('Environnement')
+      incidents << tableau_qualite_de_l_air if show_general_information && domaine.include?('Environnement')
 
       incidents << <<TYPES_START
 <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
@@ -191,8 +193,8 @@ TYPES_STOP
 
     end
 
-    unless events_by_domain.map{|domaine,value| domaine }.any?{|domaine| domaine.include?('Environnement')}
-      incidents << sous_domaine_environnement
+    if show_general_information
+      incidents << sous_domaine_environnement unless events_by_domain.map{|domaine,value| domaine }.any?{|domaine| domaine.include?('Environnement')}
     end
 
     return incidents
