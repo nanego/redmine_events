@@ -37,15 +37,23 @@ HEADER
   end
 
   def grouped_events_by_domain(events)
+
+    facts_custom_field = CustomField.find_by_id(16)
+    event_title_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['event_title_field'])
+
     departements_custom_field = CustomField.find_by_id(Setting['plugin_redmine_events']['department_field'])
     grouped_events = {}
     events.each do |evt|
-      domaines=evt.custom_field_value(CustomField.find_by_name('Domaines'))
-      domaines.each do |domaine|
+      domaines=evt.custom_field_value(CustomField.find_by_id(Setting['plugin_redmine_events']['domain_field']))
+      domaines.each_with_index do |domaine, i|
         grouped_events[domaine] ||= {}
         departments = evt.custom_field_value(departements_custom_field)
         grouped_events[domaine][departments] ||= []
-        grouped_events[domaine][departments] << evt
+        if i == 0
+          grouped_events[domaine][departments] << evt
+        else
+          grouped_events[domaine][departments] << Issue.new(subject: evt.custom_value_for(event_title_custom_field) || evt.subject, description: "Voir la rubrique '#{domaines.first}'")
+        end
       end
     end
     grouped_events
@@ -188,6 +196,15 @@ EVENT_CONTENT
             <div style="text-align: right;"><em>#{'Source'.pluralize(event.taggings.size)} : #{event.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
 SOURCES
 
+          else
+            # cf other domain
+            incidents << <<REFERENCE
+            <div>
+            <li>#{event.subject} <br/>
+            <em>#{event.description} </em>
+            </li>
+            </div><br/>
+REFERENCE
           end
 
         end
