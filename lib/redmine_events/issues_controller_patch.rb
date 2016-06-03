@@ -167,114 +167,75 @@ class IssuesController
 
     commune = Commune.find_by_name(original_issue.custom_field_value(commune_custom_field))
 
-    @flash.description = <<HEADER
-      <br />
-      <div style="text-align: center;margin-top:10px;">
-        <table border="1" cellpadding="0" cellspacing="0" id="flash_header" style="border: 2px solid rgb(0, 0, 0); box-shadow: rgb(101, 101, 101) 1px 1px 1px 0px; height: 200px; margin: 10px auto auto; text-align: center; width: 98%;">
-          <tbody>
-            <tr>
-              <td>#{Setting['plugin_redmine_events']['logo_ministere']}<br />
-              <span style="text-align: center; font-family: arial, helvetica, sans-serif;"><strong>Ministère de l'Écologie, du Développement durable et de l'Énergie<br />
-              Ministère du Logement, de l'Égalité des territoires et de la Ruralité<br />
-              Service de Défense, de Sécurité et d'Intelligence Économique<br />
-              <br />
-              <span style="font-size: 18px;">FLASH CMVOA N°025</span></strong><br />
-              du #{ I18n.l Time.now, format: :complete }</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <br />
+    @flash.description = <<GENERAL_SURROUND
+      <div class="generated-flash" style="text-align: center;padding:20px;background-color:white;">
+GENERAL_SURROUND
+
+    @flash.description << <<HEADER
+      #{Setting['plugin_redmine_events']['logo_ministere_vertical']}
+      <div style="background-color: #00529f;color:#FFFFFF;padding:20px;margin:0 0 0 110px;text-align:center;">
+      <div style="text-align: center; font-family: arial, helvetica, sans-serif;"><div style="font-size:36px;"><strong>FLASH CMVOA n°025</strong></div><br />
+      <div style="font-size:24px;"> #{ I18n.l Time.now, format: :complete }</div> </div></div>
+
+      <div style="padding:20px;margin:0 0 0 110px;text-align:center;"><span style="text-align: center; font-family: arial, helvetica, sans-serif;"><span style="font-size:24px;"><strong>
+        #{original_issue.custom_field_value(event_title_custom_field).present? ? original_issue.custom_field_value(event_title_custom_field) : @flash.subject}
+      </strong></span></span></div>
 HEADER
 
     @flash.description << <<RESUME
-      <div style="text-align: left;"> 
-        <table align="center" border="0" cellpadding="0" cellspacing="0" style="border: 0px solid white; width: 92%;">
-          <tbody>
-            <tr>
-              <td>
-              <div>
-                <div style="text-align: left;"><em>#{'Source'.pluralize(original_issue.taggings.size)} : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em>
-                  #{original_issue.custom_field_value(last_updated_at_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Dernière information : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(last_updated_at_custom_field)), format: :complete)}</em></span>".html_safe : ""}
-                </div>
-              </div>
-              <br />
-              #{original_issue.custom_field_value(summary_custom_field)}
-              <br />
-              #{list_cabinets(original_issue)}
-              #{original_issue.custom_field_value(media_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(terrorism_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(infra_map_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Carte Infra.</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(start_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Début de l'événement : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(start_date_custom_field)), format: :complete)}</em></span>".html_safe : ""}
-              #{original_issue.custom_field_value(end_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Fin de l'événement : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(end_date_custom_field)), format: :complete)}</em></span>".html_safe : ""}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div style="text-align: left;margin-top:20px;clear:both;"> 
+        <div>
+          <div style="text-align: left;"><em>#{'Source'.pluralize(original_issue.taggings.size)} : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em>
+            #{original_issue.custom_field_value(last_updated_at_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Dernière information : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(last_updated_at_custom_field)), format: :complete)}</em></span>".html_safe : ""}
+          </div>
+        </div>
+        <br />
+        #{original_issue.custom_field_value(summary_custom_field)}
+        <br />
+        #{list_cabinets(original_issue)}
+        #{original_issue.custom_field_value(media_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Evénement médiatisé.</em></span>".html_safe : ""}
+        #{original_issue.custom_field_value(terrorism_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Relève du terrorisme.</em></span>".html_safe : ""}
+        #{original_issue.custom_field_value(infra_map_custom_field).to_i>0 ? "<br /><span style='font-size:12px;'><em>Carte Infra.</em></span>".html_safe : ""}
+        #{original_issue.custom_field_value(start_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Début de l'événement : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(start_date_custom_field)), format: :complete)}</em></span>".html_safe : ""}
+        #{original_issue.custom_field_value(end_date_custom_field).present? ? "<br /><span style='font-size:12px;'><em>Fin de l'événement : #{ I18n.l(DateTime.parse(original_issue.custom_field_value(end_date_custom_field)), format: :complete)}</em></span>".html_safe : ""}
       </div>
       <br />
 RESUME
 
-    @flash.description << <<TITRE
-      <table border="1" cellpadding="1" cellspacing="0" id="title" style="border: 1px solid rgb(0, 0, 0); margin: auto; width: 98%; background-color: rgb(230, 230, 230);">
-        <tbody>
-          <tr>
-            <td style="text-align: center;"><span style="font-size:18px;">#{original_issue.custom_field_value(event_title_custom_field).present? ? original_issue.custom_field_value(event_title_custom_field) : @flash.subject}</span></td>
-          </tr>
-        </tbody>
-      </table>
-      <br />
-TITRE
-
     @flash.description << <<DOMAINES
-      <table align="center" border="1" cellpadding="0" cellspacing="0" style="width: 98%; border: 1px solid rgb(0, 0, 0);">
-        <tbody>
-          <tr>
-            <td style="text-align: center;"><strong><span style="font-size:14px;">
-              #{original_issue.custom_field_value(domaine_custom_field).join('-')}
-            </span></strong></td>
-          </tr>
-        </tbody>
-      </table>
-      <br />
+      <div style="text-align: center;border-top: solid 1px black;border-bottom: solid 1px black;margin: 10px 0 20px 0;color:#00529f;padding:10px 0;"><span style="font-size:18px;text-transform:uppercase;">
+        #{original_issue.custom_field_value(domaine_custom_field).join('-')}
+      </span></div>
 DOMAINES
 
     departments = original_issue.custom_field_value(departements_custom_field)
     @flash.description << <<DESCRIPTION
       <div style="text-align: left;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 92%;">
-          <tbody>
-            <tr>
-              <td>
-                <b>
-                  #{if commune.present? || departments.any?{|d|d.present?}
-                      txt = commune.present? && departments.size < 2 ? (commune.department_name.to_s + ' (' + commune.department.to_s.rjust(2, '0') + ')' )  : departments.join(', ')
-                      txt << ' :'
-                      txt
-                    end}
-                </b>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                #{original_issue.custom_field_value(facts_custom_field)}<br/>
-                #{original_issue.custom_field_value(dead_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(dead_number_custom_field), 'mort')+(original_issue.custom_value_for(dead_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(dead_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
-                #{original_issue.custom_field_value(lost_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(lost_number_custom_field), 'disparu')+(original_issue.custom_value_for(lost_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(lost_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
-                #{original_issue.custom_field_value(badly_wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\' /><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(badly_wounded_number_custom_field), 'blessé')+' '+'grave'.pluralize(original_issue.custom_field_value(badly_wounded_number_custom_field).to_i)+(original_issue.custom_value_for(badly_wounded_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(badly_wounded_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
-                #{original_issue.custom_field_value(slightly_wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(slightly_wounded_number_custom_field), 'blessé')+' '+'léger'.pluralize(original_issue.custom_field_value(slightly_wounded_number_custom_field).to_i)+(original_issue.custom_value_for(slightly_wounded_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(slightly_wounded_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
-                #{original_issue.custom_field_value(wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\' /><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(wounded_number_custom_field), 'blessé')+(original_issue.custom_value_for(wounded_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(wounded_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
-                #{original_issue.custom_field_value(engaged_actions_custom_field)}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="margin-bottom:20px;"><b>#{if commune.present? || departments.any?{|d|d.present?}
+                                                txt = commune.present? && departments.size < 2 ? (commune.department_name.to_s + ' (' + commune.department.to_s.rjust(2, '0') + ')' )  : departments.join(', ')
+                                                txt << ' :'
+                                                txt
+                                              end}</b>
+        </div>
+        <div style="margin-left:20px;">
+          #{original_issue.custom_field_value(facts_custom_field)}<br/>
+          #{original_issue.custom_field_value(dead_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_red.png\' /><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(dead_number_custom_field), 'mort')+(original_issue.custom_value_for(dead_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(dead_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+          #{original_issue.custom_field_value(lost_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(lost_number_custom_field), 'disparu')+(original_issue.custom_value_for(lost_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(lost_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+          #{original_issue.custom_field_value(badly_wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\' /><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(badly_wounded_number_custom_field), 'blessé')+' '+'grave'.pluralize(original_issue.custom_field_value(badly_wounded_number_custom_field).to_i)+(original_issue.custom_value_for(badly_wounded_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(badly_wounded_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+          #{original_issue.custom_field_value(slightly_wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\'/><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(slightly_wounded_number_custom_field), 'blessé')+' '+'léger'.pluralize(original_issue.custom_field_value(slightly_wounded_number_custom_field).to_i)+(original_issue.custom_value_for(slightly_wounded_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(slightly_wounded_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+          #{original_issue.custom_field_value(wounded_number_custom_field).to_i > 0 ? ('<img style="padding-left: 2.0em;" src=\'/plugin_assets/redmine_events/images/arrow_orange.png\' /><span style="padding-left: .6em;">'+pluralize(original_issue.custom_field_value(wounded_number_custom_field), 'blessé')+(original_issue.custom_value_for(wounded_number_custom_field).comment.present? ? " (#{original_issue.custom_value_for(wounded_number_custom_field).comment})" : "" )+'</span><br/>').html_safe : ''}
+          #{original_issue.custom_field_value(engaged_actions_custom_field)}
+        </div>
       </div>
-      <br />
 DESCRIPTION
 
     @flash.description << <<SOURCES
      <div style="text-align: right;"><em>#{'Source'.pluralize(original_issue.taggings.size)} : #{original_issue.taggings.map{|source| "#{source.tag.name}#{source.details.present? ? ' ('+source.details.to_s+')' : '' }"}.join(', ')}</em></div>
 SOURCES
+
+    @flash.description << <<GENERAL_SURROUND_END
+      </div>
+GENERAL_SURROUND_END
 
   end
 
