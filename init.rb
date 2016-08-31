@@ -19,8 +19,7 @@ Redmine::Plugin.register :redmine_events do
   author 'Vincent ROBERT'
   description 'This is a private plugin for Redmine which allow us to create and organize event notifications instead of issues'
   version '0.0.1'
-  url 'http://example.com/path/to/plugin'
-  author_url 'http://example.com/about'
+  url 'https://github.com/nanego/redmine_events'
   requires_redmine_plugin :redmine_base_select2, :version_or_higher => '0.0.1'
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
   permission :points, { :points => [:index] }, :public => true
